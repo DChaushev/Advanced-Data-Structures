@@ -7,15 +7,26 @@
 
 #include "Treap.h"
 
-void Treap::insert(int key){
+Treap::Treap() {
+    root = 0;
+}
+
+void Treap::insert(int key) {
     //TODO
 }
 
-void Treap::remove(int key){
+void Treap::remove(int key) {
     //TODO
 }
 
-bool Treap::containsKey(int key) const{
+bool Treap::containsKey(int key) const {
     //TODO
 }
 
+void Treap::rotate_left(const TreapNode& node) {
+    //TODO
+}
+
+void Treap::rotate_right(const TreapNode& node) {
+    //TODO
+}

@@ -17,7 +17,7 @@ TreapNode::TreapNode(int k) {
     parent = 0;
 }
 
-void TreapNode::set_ket(const int k) {
+void TreapNode::set_key(const int k) {
     key = k;
 }
 

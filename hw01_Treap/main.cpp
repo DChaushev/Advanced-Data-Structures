@@ -11,7 +11,7 @@
 using namespace std;
 
 /*
- * 
+ * mainly (lol, see what I did there) for testing purposes
  */
 int main(int argc, char** argv) {
 
@@ -21,6 +21,8 @@ int main(int argc, char** argv) {
     
     node.set_left_child(left);
     node.set_right_child(right);
+    
+    right.set_key(20);
     
     cout << node.get_key() << endl;
     cout << node.get_left_child()->get_parent()->get_key() << endl;

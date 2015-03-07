@@ -14,7 +14,7 @@ public:
     
     TreapNode(int k);
 
-    void set_ket(const int k);
+    void set_key(const int k);
     void set_priority(const float p);
     
     int get_key();

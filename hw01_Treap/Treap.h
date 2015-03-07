@@ -8,38 +8,45 @@
 #ifndef TREAP_H
 #define	TREAP_H
 
-class Treap
-{
-	
+#include "TreapNode.h"
+
+
+class Treap {
 public:
-  Treap();
-  ~Treap();
-  
-  /**
-  * Inserts a node in the treap with the provided @key
-  * 
-  * @param key: key to be inserted
-  */
-  void insert(int key);
-  
-  /**
-  * Removes the node from the treap with the provided @key
-  * 
-  * @param key: key to be removed
-  */
-  void remove(int key);
-  
-  /**
-  * Checks whether a given @key is already in the treap
-  * 
-  * @param key: key to be searched for
-  * @return true, if the key is in the treap, and false, otherwise
-  */
-  bool containsKey(int key) const;
-  
+    Treap();
+    ~Treap();
+
+    /**
+     * Inserts a node in the treap with the provided @key
+     * 
+     * @param key: key to be inserted
+     */
+    void insert(int key);
+
+    /**
+     * Removes the node from the treap with the provided @key
+     * 
+     * @param key: key to be removed
+     */
+    void remove(int key);
+
+    /**
+     * Checks whether a given @key is already in the treap
+     * 
+     * @param key: key to be searched for
+     * @return true, if the key is in the treap, and false, otherwise
+     */
+    bool containsKey(int key) const;
+
 private:
-  Treap& operator=(const Treap&); // Do not implement me!
-  Treap(const Treap&); // Do not implement me!
+    
+    TreapNode* root;
+    
+    void rotate_left(const TreapNode& node);
+    void rotate_right(const TreapNode& node);
+
+    Treap& operator=(const Treap&); // Do not implement me!
+    Treap(const Treap&); // Do not implement me!
 };
 
 #endif	/* TREAP_H */
