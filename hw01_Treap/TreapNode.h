@@ -8,20 +8,32 @@
 #ifndef TREAPNODE_H
 #define	TREAPNODE_H
 
-#include <cstdlib>
 
 class TreapNode {
 public:
+    
+    TreapNode(int k);
 
-    TreapNode(int k) {
-        key = k;
-        priority = (float) rand() / RAND_MAX;
-        left = 0;
-        right = 0;
-    }
-
+    void set_ket(const int k);
+    void set_priority(const float p);
+    
+    int get_key();
+    float get_priority();
+    
+    void set_left_child(const TreapNode & left_child);
+    void set_right_child(const TreapNode & right_child);
+    void set_parent(const TreapNode & parent);
+    
+    TreapNode* get_left_child();
+    TreapNode* get_righ_child();
+    TreapNode* get_parent();
+    
+    
+private:
+    
     int key;
     float priority;
+    TreapNode* parent;
     TreapNode* left;
     TreapNode* right;
 };

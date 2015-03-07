@@ -19,15 +19,17 @@ int main(int argc, char** argv) {
     TreapNode left{2};
     TreapNode right{3};
     
-    node.left = &left;
-    node.right = &right;
+    node.set_left_child(left);
+    node.set_right_child(right);
     
-    cout << node.key << endl;
-    cout << node.left->key << endl;
-    cout << node.right->key << endl;
-    cout << node.priority << endl;
-    cout << node.left->priority << endl;
-    cout << node.right->priority << endl;
+    cout << node.get_key() << endl;
+    cout << node.get_left_child()->get_parent()->get_key() << endl;
+    cout << node.get_righ_child()->get_parent()->get_key() << endl;
+    cout << node.get_left_child()->get_key() << endl;
+    cout << node.get_righ_child()->get_key() << endl;
+    cout << node.get_priority() << endl;
+    cout << node.get_left_child()->get_priority() << endl;
+    cout << node.get_righ_child()->get_priority() << endl;
     
     
     
