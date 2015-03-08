@@ -49,6 +49,7 @@ private:
     void rotate_right(TreapNode& node);
     
     void insert(TreapNode*& root, int key, TreapNode*& parent);
+    bool containsKey(TreapNode& root, int key) const;
     void heapify(TreapNode& node);
     
     Treap& operator=(const Treap&); // Do not implement me!

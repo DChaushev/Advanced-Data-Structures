@@ -75,7 +75,18 @@ void Treap::remove(int key) {
 }
 
 bool Treap::containsKey(int key) const {
-    //TODO
+    return containsKey(*root, key);
+}
+
+bool Treap::containsKey(TreapNode& root, int key) const {
+    if (&root == 0) return false;
+
+    if (root.key == key)
+        return true;
+    if (key < root.key)
+        return containsKey(*root.left, key);
+    if (key > root.key)
+        return containsKey(*root.right, key);
 }
 
 void Treap::rotate_left(TreapNode& node) {

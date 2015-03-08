@@ -33,6 +33,13 @@ int main(int argc, char** argv) {
     treap.treverse();
     treap.insert(8);
     treap.treverse();
+    
+    cout << treap.containsKey(10) << endl;
+    cout << treap.containsKey(0) << endl;
+    cout << treap.containsKey(19) << endl;
+    cout << treap.containsKey(18) << endl;
+    
+    
 
     return 0;
 }
