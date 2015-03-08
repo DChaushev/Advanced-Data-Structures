@@ -6,13 +6,47 @@
  */
 
 #include "Treap.h"
+#include <queue>
+#include <iostream>
 
 Treap::Treap() {
     root = 0;
 }
 
 void Treap::insert(int key) {
-    //TODO
+    insert(root, key, root);
+}
+
+void Treap::insert(TreapNode*& root, int key, TreapNode*& parent) {
+    if (!root) {
+        root = new TreapNode(key);
+        root->parent = parent;
+    } else if (key < root->key)
+        insert(root->left, key, root);
+    else if (key > root->key)
+        insert(root->right, key, root);
+}
+
+void Treap::treverse() {
+    std::queue<TreapNode*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        TreapNode* n = q.front();
+        q.pop();
+
+        std::cout << n->key << ": ";
+        if (n->left != 0) {
+            std::cout << " left: " << n->left->key;
+            q.push(n->left);
+        }
+        if (n->right != 0) {
+            std::cout << " right: " << n->right->key;
+            q.push(n->right);
+        }
+
+        std::cout << std::endl;
+    }
 }
 
 void Treap::remove(int key) {
@@ -31,8 +65,8 @@ void Treap::rotate_left(TreapNode& node) {
     if (node.parent == root) {
         root = &node;
     } else {
-        temp = node.parent->parent;
-        node.parent = temp;
+        node.parent = node.left->parent;
+        node.parent->left = &node;
     }
     node.left->parent = &node;
 }
@@ -45,8 +79,8 @@ void Treap::rotate_right(TreapNode& node) {
     if (node.parent == root) {
         root = &node;
     } else {
-        temp = node.parent->parent;
-        node.parent = temp;
+        node.parent = node.right->parent;
+        node.parent->right = &node;
     }
     node.right->parent = &node;
 }
