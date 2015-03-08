@@ -147,48 +147,48 @@ bool Treap::containsKey(const TreapNode& root, const int key) const {
 
 void Treap::rotate_left(TreapNode& node) {
 
-    TreapNode* w = node.right;
-    w->parent = node.parent;
-    if (w->parent != 0) {
-        if (w->parent->left == &node) {
-            w->parent->left = w;
+    TreapNode* n = node.right;
+    n->parent = node.parent;
+    if (n->parent != 0) {
+        if (n->parent->left == &node) {
+            n->parent->left = n;
         } else {
-            w->parent->right = w;
+            n->parent->right = n;
         }
     }
-    node.right = w->left;
+    node.right = n->left;
     if (node.right != 0) {
         node.right->parent = &node;
     }
-    node.parent = w;
-    w->left = &node;
+    node.parent = n;
+    n->left = &node;
     if (&node == root) {
-        root = w;
+        root = n;
         root->parent = 0;
     }
 }
 
 void Treap::rotate_right(TreapNode& node) {
 
-    TreapNode* w = node.left;
-    if (w != 0) {
-        w->parent = node.parent;
-        if (w->parent != 0) {
-            if (w->parent->left == &node) {
-                w->parent->left = w;
+    TreapNode* n = node.left;
+    if (n != 0) {
+        n->parent = node.parent;
+        if (n->parent != 0) {
+            if (n->parent->left == &node) {
+                n->parent->left = n;
             } else {
-                w->parent->right = w;
+                n->parent->right = n;
             }
         }
     }
-    node.left = w->right;
+    node.left = n->right;
     if (node.left != 0) {
         node.left->parent = &node;
     }
-    node.parent = w;
-    w->right = &node;
+    node.parent = n;
+    n->right = &node;
     if (&node == root) {
-        root = w;
+        root = n;
         root->parent = 0;
     }
 }
