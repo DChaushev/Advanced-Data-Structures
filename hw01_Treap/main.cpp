@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include "TreapNode.h"
 #include "Treap.h"
 
 using namespace std;
@@ -19,14 +18,20 @@ int main(int argc, char** argv) {
     Treap treap{};
 
     treap.insert(6);
+    treap.treverse();
     treap.insert(2);
+    treap.treverse();
     treap.insert(18);
+    treap.treverse();
     treap.insert(-1);
+    treap.treverse();
     treap.insert(4);
+    treap.treverse();
     treap.insert(10);
+    treap.treverse();
     treap.insert(3);
+    treap.treverse();
     treap.insert(8);
-    
     treap.treverse();
 
     return 0;

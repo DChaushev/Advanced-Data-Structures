@@ -49,7 +49,8 @@ private:
     void rotate_right(TreapNode& node);
     
     void insert(TreapNode*& root, int key, TreapNode*& parent);
-
+    void heapify(TreapNode& node);
+    
     Treap& operator=(const Treap&); // Do not implement me!
     Treap(const Treap&); // Do not implement me!
 };

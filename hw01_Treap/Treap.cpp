@@ -20,22 +20,43 @@ void Treap::insert(int key) {
 void Treap::insert(TreapNode*& root, int key, TreapNode*& parent) {
     if (!root) {
         root = new TreapNode(key);
-        root->parent = parent;
+        if (this->root == root)
+            root->parent = 0;
+        else root->parent = parent;
+        heapify(*root);
     } else if (key < root->key)
         insert(root->left, key, root);
     else if (key > root->key)
         insert(root->right, key, root);
 }
 
+void Treap::heapify(TreapNode& node) {
+    TreapNode* parent = node.parent;
+    if (&node != root && node.priority < parent->priority) {
+        if (parent->left == &node) {
+            rotate_right(*node.parent);
+            heapify(node);
+        }
+        if (parent->right == &node) {
+            rotate_left(*node.parent);
+            heapify(node);
+        }
+    }
+}
+
 void Treap::treverse() {
+
+    std::cout << "=============" << std::endl;
+
     std::queue<TreapNode*> q;
     q.push(root);
 
     while (!q.empty()) {
         TreapNode* n = q.front();
+
         q.pop();
 
-        std::cout << n->key << ": ";
+        std::cout << n->key << ": " << n->priority << " ";
         if (n->left != 0) {
             std::cout << " left: " << n->left->key;
             q.push(n->left);
@@ -58,31 +79,51 @@ bool Treap::containsKey(int key) const {
 }
 
 void Treap::rotate_left(TreapNode& node) {
-    TreapNode* temp = node.left;
-    node.left = node.parent;
-    node.left->right = temp;
 
-    if (node.parent == root) {
-        root = &node;
-    } else {
-        node.parent = node.left->parent;
-        node.parent->left = &node;
+    TreapNode* w = node.right;
+    w->parent = node.parent;
+    if (w->parent != 0) {
+        if (w->parent->left == &node) {
+            w->parent->left = w;
+        } else {
+            w->parent->right = w;
+        }
     }
-    node.left->parent = &node;
+    node.right = w->left;
+    if (node.right != 0) {
+        node.right->parent = &node;
+    }
+    node.parent = w;
+    w->left = &node;
+    if (&node == root) {
+        root = w;
+        root->parent = 0;
+    }
 }
 
 void Treap::rotate_right(TreapNode& node) {
-    TreapNode* temp = node.right;
-    node.right = node.parent;
-    node.right->left = temp;
 
-    if (node.parent == root) {
-        root = &node;
-    } else {
-        node.parent = node.right->parent;
-        node.parent->right = &node;
+    TreapNode* w = node.left;
+    if (w != 0) {
+        w->parent = node.parent;
+        if (w->parent != 0) {
+            if (w->parent->left == &node) {
+                w->parent->left = w;
+            } else {
+                w->parent->right = w;
+            }
+        }
     }
-    node.right->parent = &node;
+    node.left = w->right;
+    if (node.left != 0) {
+        node.left->parent = &node;
+    }
+    node.parent = w;
+    w->right = &node;
+    if (&node == root) {
+        root = w;
+        root->parent = 0;
+    }
 }
 
 
