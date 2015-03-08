@@ -7,10 +7,31 @@
 
 #include "Treap.h"
 #include <queue>
+#include <stack>
 #include <iostream>
 
 Treap::Treap() {
     root = 0;
+}
+
+Treap::~Treap() {
+    std::cout << "\ndeleting the treap..." << std::endl;
+    int cnt = 0;
+    std::queue<TreapNode*> s;
+    s.push(root);
+
+    while (!s.empty()) {
+        TreapNode* n = s.front();
+        s.pop();
+        if (n->left != 0)
+            s.push(n->left);
+        if (n->right != 0)
+            s.push(n->right);
+        
+        delete(n);
+        cnt++;
+    }
+    std::cout << "done. " << cnt << " nodes deleted." << std::endl;
 }
 
 void Treap::insert(int key) {
@@ -71,14 +92,49 @@ void Treap::treverse() {
 }
 
 void Treap::remove(int key) {
-    //TODO
+    TreapNode* node = findNode(*root, key);
+
+    if (&node == 0) return;
+    while (!(node->left == 0 && node->right == 0)) {
+        if (node->left == 0) {
+            rotate_left(*node);
+        } else if (node->right == 0) {
+            rotate_right(*node);
+        } else if (node->left->priority < node->right->priority) {
+            rotate_right(*node);
+        } else {
+            rotate_left(*node);
+        }
+        if (root == node) {
+            root = node->parent;
+        }
+    }
+
+    if (node->parent->left && node == node->parent->left)
+        node->parent->left = 0;
+    if (node->parent->right && node == node->parent->right)
+        node->parent->right = 0;
+
+    delete(node);
+
+}
+
+TreapNode* Treap::findNode(TreapNode &root, int key) {
+    if (&root == 0) return 0;
+
+    if (root.key == key)
+        return &root;
+    if (key < root.key)
+        return findNode(*root.left, key);
+    if (key > root.key)
+        return findNode(*root.right, key);
 }
 
 bool Treap::containsKey(int key) const {
     return containsKey(*root, key);
 }
 
-bool Treap::containsKey(TreapNode& root, int key) const {
+bool Treap::containsKey(const TreapNode& root, const int key) const {
     if (&root == 0) return false;
 
     if (root.key == key)

@@ -8,15 +8,14 @@
 #ifndef TREAPNODE_H
 #define	TREAPNODE_H
 
-
 class TreapNode {
 public:
-    
+
     TreapNode(int k);
 
     void set_key(const int k);
     void set_priority(const float p);
-    
+
     int key;
     float priority;
     TreapNode* parent;

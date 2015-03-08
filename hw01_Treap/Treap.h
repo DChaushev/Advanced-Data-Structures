@@ -10,11 +10,10 @@
 
 #include "TreapNode.h"
 
-
 class Treap {
 public:
     Treap();
-    ~Treap() = default; 
+    ~Treap();
 
     /**
      * Inserts a node in the treap with the provided @key
@@ -37,21 +36,26 @@ public:
      * @return true, if the key is in the treap, and false, otherwise
      */
     bool containsKey(int key) const;
-    
+
     void treverse();
-    
+
 
 private:
-    
+
     TreapNode* root;
-    
+
     void rotate_left(TreapNode& node);
+
     void rotate_right(TreapNode& node);
-    
+
     void insert(TreapNode*& root, int key, TreapNode*& parent);
-    bool containsKey(TreapNode& root, int key) const;
+
+    bool containsKey(const TreapNode& root, const int key) const;
+
     void heapify(TreapNode& node);
-    
+
+    TreapNode* findNode(TreapNode& root, const int key);
+
     Treap& operator=(const Treap&); // Do not implement me!
     Treap(const Treap&); // Do not implement me!
 };
