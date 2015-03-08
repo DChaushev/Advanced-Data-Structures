@@ -14,7 +14,7 @@
 class Treap {
 public:
     Treap();
-    ~Treap();
+    ~Treap() = default; 
 
     /**
      * Inserts a node in the treap with the provided @key
@@ -38,12 +38,12 @@ public:
      */
     bool containsKey(int key) const;
 
-private:
+//private: // TODO: I'm keeping the code below public so I can test it easily.
     
     TreapNode* root;
     
-    void rotate_left(const TreapNode& node);
-    void rotate_right(const TreapNode& node);
+    void rotate_left(TreapNode& node);
+    void rotate_right(TreapNode& node);
 
     Treap& operator=(const Treap&); // Do not implement me!
     Treap(const Treap&); // Do not implement me!

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "TreapNode.h"
+#include "Treap.h"
 
 using namespace std;
 
@@ -15,25 +16,55 @@ using namespace std;
  */
 int main(int argc, char** argv) {
 
-    TreapNode node{1};
-    TreapNode left{2};
-    TreapNode right{3};
+    TreapNode X{1};
+    TreapNode Y{2};
+    TreapNode C{3};
+
+    X.left = &Y;
+    X.left->parent = &X;
+
+    X.right = &C;
+    X.right->parent = &X;
+
+    cout << X.key << endl;
+    cout << X.left->parent->key << endl;
+    cout << X.right->parent->key << endl;
+    cout << X.left->key << endl;
+    cout << X.right->key << endl;
+
     
-    node.set_left_child(left);
-    node.set_right_child(right);
+    //=====================
+    //test rotations
+    //====================
+    cout << "Test rotations" << endl;
+    cout << "================" << endl;
     
-    right.set_key(20);
-    
-    cout << node.get_key() << endl;
-    cout << node.get_left_child()->get_parent()->get_key() << endl;
-    cout << node.get_righ_child()->get_parent()->get_key() << endl;
-    cout << node.get_left_child()->get_key() << endl;
-    cout << node.get_righ_child()->get_key() << endl;
-    cout << node.get_priority() << endl;
-    cout << node.get_left_child()->get_priority() << endl;
-    cout << node.get_righ_child()->get_priority() << endl;
-    
-    
+    TreapNode A{4};
+    TreapNode B{5};
+
+    Treap treap{};
+
+    treap.root = &X;
+    Y.left = &A;
+    Y.right = &B;
+
+    cout << "root: " << treap.root->key << endl;
+    cout << X.key << ": " << X.left->key << " " << X.right->key << endl;
+    cout << Y.key << ": " << Y.left->key << " " << Y.right->key << endl;
+
+    treap.rotate_right(Y);
+    cout << endl;
+
+    cout << "root: " << treap.root->key << endl;
+    cout << X.key << ": " << X.left->key << " " << X.right->key << endl;
+    cout << Y.key << ": " << Y.left->key << " " << Y.right->key << endl;
+
+    treap.rotate_left(X); //Rotate X back to it's original place
+    cout << endl;         // output should be the same as before the first rotation
+
+    cout << "root: " << treap.root->key << endl;
+    cout << X.key << ": " << X.left->key << " " << X.right->key << endl;
+    cout << Y.key << ": " << Y.left->key << " " << Y.right->key << endl;
     
     return 0;
 }

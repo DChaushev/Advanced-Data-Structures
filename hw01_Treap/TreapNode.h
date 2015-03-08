@@ -17,20 +17,6 @@ public:
     void set_key(const int k);
     void set_priority(const float p);
     
-    int get_key();
-    float get_priority();
-    
-    void set_left_child(const TreapNode & left_child);
-    void set_right_child(const TreapNode & right_child);
-    void set_parent(const TreapNode & parent);
-    
-    TreapNode* get_left_child();
-    TreapNode* get_righ_child();
-    TreapNode* get_parent();
-    
-    
-private:
-    
     int key;
     float priority;
     TreapNode* parent;
