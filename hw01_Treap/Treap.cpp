@@ -27,7 +27,7 @@ Treap::~Treap() {
             s.push(n->left);
         if (n->right != 0)
             s.push(n->right);
-        
+
         delete(n);
         cnt++;
     }
@@ -93,30 +93,30 @@ void Treap::treverse() {
 
 void Treap::remove(int key) {
     TreapNode* node = findNode(*root, key);
+    bool t = (&node == 0);
+    if (t) {
+        while (!(node->left == 0 && node->right == 0)) {
+            if (node->left == 0) {
+                rotate_left(*node);
+            } else if (node->right == 0) {
+                rotate_right(*node);
+            } else if (node->left->priority < node->right->priority) {
+                rotate_right(*node);
+            } else {
+                rotate_left(*node);
+            }
+            if (root == node) {
+                root = node->parent;
+            }
+        }
 
-    if (&node == 0) return;
-    while (!(node->left == 0 && node->right == 0)) {
-        if (node->left == 0) {
-            rotate_left(*node);
-        } else if (node->right == 0) {
-            rotate_right(*node);
-        } else if (node->left->priority < node->right->priority) {
-            rotate_right(*node);
-        } else {
-            rotate_left(*node);
-        }
-        if (root == node) {
-            root = node->parent;
-        }
+        if (node->parent->left && node == node->parent->left)
+            node->parent->left = 0;
+        if (node->parent->right && node == node->parent->right)
+            node->parent->right = 0;
+
+        delete(node);
     }
-
-    if (node->parent->left && node == node->parent->left)
-        node->parent->left = 0;
-    if (node->parent->right && node == node->parent->right)
-        node->parent->right = 0;
-
-    delete(node);
-
 }
 
 TreapNode* Treap::findNode(TreapNode &root, int key) {

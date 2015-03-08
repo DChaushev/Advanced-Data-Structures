@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "Treap.h"
+#include <cstdlib>
 
 using namespace std;
 
@@ -17,31 +18,37 @@ int main(int argc, char** argv) {
 
     Treap treap{};
 
-    treap.insert(6);
-    treap.treverse();
-    treap.insert(2);
-    treap.treverse();
-    treap.insert(18);
-    treap.treverse();
-    treap.insert(-1);
-    treap.treverse();
-    treap.insert(4);
-    treap.treverse();
-    treap.insert(10);
-    treap.treverse();
-    treap.insert(3);
-    treap.treverse();
-    treap.insert(8);
+    for (int i = 0; i < 1000000; i++) {
+        int k = rand() % 1000000 + 1;
+        treap.insert(k);
+    }
+
+    //    treap.insert(6);
+    //    treap.treverse();
+    //    treap.insert(2);
+    //    treap.treverse();
+    //    treap.insert(18);
+    //    treap.treverse();
+    //    treap.insert(-1);
+    //    treap.treverse();
+    //    treap.insert(4);
+    //    treap.treverse();
+    //    treap.insert(10);
+    //    treap.treverse();
+    //    treap.insert(3);
+    //    treap.treverse();
+    //    treap.insert(8);
+    //    treap.treverse();
+
+
     treap.treverse();
 
-    cout << treap.containsKey(10) << endl;
-    cout << treap.containsKey(0) << endl;
+    cout << treap.containsKey(7039) << endl;
+    treap.remove(7039);
+    cout << treap.containsKey(29501) << endl;
     cout << treap.containsKey(19) << endl;
     cout << treap.containsKey(18) << endl;
 
-    treap.remove(18);
-    treap.treverse();
-    
     return 0;
 }
 
