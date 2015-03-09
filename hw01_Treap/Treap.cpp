@@ -93,8 +93,7 @@ void Treap::treverse() {
 
 void Treap::remove(int key) {
     TreapNode* node = findNode(*root, key);
-    bool t = (&node == 0);
-    if (t) {
+    if (node != 0) {
         while (!(node->left == 0 && node->right == 0)) {
             if (node->left == 0) {
                 rotate_left(*node);
@@ -120,7 +119,8 @@ void Treap::remove(int key) {
 }
 
 TreapNode* Treap::findNode(TreapNode &root, int key) {
-    if (&root == 0) return 0;
+    if (&root == 0)
+        return 0;
 
     if (root.key == key)
         return &root;

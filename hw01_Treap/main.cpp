@@ -18,29 +18,31 @@ int main(int argc, char** argv) {
 
     Treap treap{};
 
-    for (int i = 0; i < 1000000; i++) {
-        int k = rand() % 1000000 + 1;
-        treap.insert(k);
-    }
+        for (int i = 0; i < 10000; i++) {
+            int k = rand() % 100000 + 1;
+            treap.insert(k);
+        }
 
-    //    treap.insert(6);
-    //    treap.treverse();
-    //    treap.insert(2);
-    //    treap.treverse();
-    //    treap.insert(18);
-    //    treap.treverse();
-    //    treap.insert(-1);
-    //    treap.treverse();
-    //    treap.insert(4);
-    //    treap.treverse();
-    //    treap.insert(10);
-    //    treap.treverse();
-    //    treap.insert(3);
-    //    treap.treverse();
-    //    treap.insert(8);
-    //    treap.treverse();
+//    treap.insert(6);
+//    treap.treverse();
+//    treap.insert(2);
+//    treap.treverse();
+//    treap.insert(18);
+//    treap.treverse();
+//    treap.insert(-1);
+//    treap.treverse();
+//    treap.insert(4);
+//    treap.treverse();
+//    treap.insert(10);
+//    treap.treverse();
+//    treap.insert(3);
+//    treap.treverse();
+//    treap.insert(8);
+//    treap.treverse();
 
 
+    cout << treap.containsKey(3) << endl;
+    treap.remove(6);
     treap.treverse();
 
     cout << treap.containsKey(7039) << endl;
