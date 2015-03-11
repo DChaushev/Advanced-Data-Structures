@@ -148,20 +148,22 @@ bool Treap::containsKey(const TreapNode& root, const int key) const {
 void Treap::rotate_left(TreapNode& node) {
 
     TreapNode* n = node.right;
-    n->parent = node.parent;
-    if (n->parent != 0) {
-        if (n->parent->left == &node) {
-            n->parent->left = n;
-        } else {
-            n->parent->right = n;
+    if (n != 0) {
+        n->parent = node.parent;
+        if (n->parent != 0) {
+            if (n->parent->left == &node) {
+                n->parent->left = n;
+            } else {
+                n->parent->right = n;
+            }
         }
+        node.right = n->left;
     }
-    node.right = n->left;
     if (node.right != 0) {
         node.right->parent = &node;
     }
     node.parent = n;
-    n->left = &node;
+    node.parent->left = &node;
     if (&node == root) {
         root = n;
         root->parent = 0;
@@ -180,13 +182,13 @@ void Treap::rotate_right(TreapNode& node) {
                 n->parent->right = n;
             }
         }
+        node.left = n->right;
     }
-    node.left = n->right;
     if (node.left != 0) {
         node.left->parent = &node;
     }
     node.parent = n;
-    n->right = &node;
+    node.parent->right = &node;
     if (&node == root) {
         root = n;
         root->parent = 0;

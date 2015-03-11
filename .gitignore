@@ -26,3 +26,5 @@
 *.exe
 *.out
 *.app
+/hw01_Treap_java/nbproject/private/
+/hw01_Treap_java/build/

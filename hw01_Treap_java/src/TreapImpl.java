@@ -79,14 +79,12 @@ public class TreapImpl implements Treap {
                     root = node.parent;
                 }
             }
-
             if (node.parent.left != null && node == node.parent.left) {
                 node.parent.left = null;
             }
             if (node.parent.right != null && node == node.parent.right) {
                 node.parent.right = null;
             }
-
         }
     }
 
@@ -130,20 +128,22 @@ public class TreapImpl implements Treap {
     private void rotateLeft(TreapNode node) {
 
         TreapNode n = node.right;
-        n.parent = node.parent;
-        if (n.parent != null) {
-            if (n.parent.left == node) {
-                n.parent.left = n;
-            } else {
-                n.parent.right = n;
+        if (n != null) {
+            n.parent = node.parent;
+            if (n.parent != null) {
+                if (n.parent.left == node) {
+                    n.parent.left = n;
+                } else {
+                    n.parent.right = n;
+                }
             }
+            node.right = n.left;
         }
-        node.right = n.left;
         if (node.right != null) {
             node.right.parent = node;
         }
         node.parent = n;
-        n.left = node;
+        node.parent.left = node;
         if (node == root) {
             root = n;
             root.parent = null;
@@ -162,13 +162,13 @@ public class TreapImpl implements Treap {
                     n.parent.right = n;
                 }
             }
+            node.left = n.right;
         }
-        node.left = n.right;
         if (node.left != null) {
             node.left.parent = node;
         }
         node.parent = n;
-        n.right = node;
+        node.parent.right = node;
         if (node == root) {
             root = n;
             root.parent = null;
