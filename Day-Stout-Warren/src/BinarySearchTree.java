@@ -10,9 +10,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  *
  * @author grade
- * @param <T>
+ * @param <K>
+ * @param <V>
  */
-public class BinarySearchTree<T extends Comparable> {
+public class BinarySearchTree<K extends Comparable<K>, V> {
 
     private TreeNode root;
     private int numberOfElements;
@@ -22,64 +23,124 @@ public class BinarySearchTree<T extends Comparable> {
         numberOfElements = 0;
     }
 
-    public void insert(T key) {
-        insert(root, key, root);
+    public void insert(K key, V value) {
+
+        TreeNode parent = null;
+        TreeNode current = root;
+        int cmp;
+        while (current != null) {
+            parent = current;
+            cmp = key.compareTo(current.key);
+            if (cmp == 0) {
+                parent.value = value;
+                return;
+            } else if (cmp < 0) {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+        }
+        if (parent == null) {
+            root = new TreeNode(key, value);
+        } else if (key.compareTo(parent.key) < 0) {
+            parent.left = new TreeNode(key, value);
+        } else {
+            parent.right = new TreeNode(key, value);
+        }
+        numberOfElements++;
+        if (numberOfElements % 50 == 0) {
+            dsw();
+        }
     }
 
-    private void insert(TreeNode root, T key, TreeNode parent) {
-        if (root == null) {
-            root = new TreeNode(key);
-            numberOfElements++;
-            if (this.root == null) {
-                this.root = root;
+    public V get(K key) {
+        TreeNode node = findNode(key);
+        if (node != null) {
+            return node.value;
+        }
+        return null;
+    }
+
+    public boolean contains(K key) {
+        return get(key) != null;
+    }
+
+    public void remove(K key) {
+
+        TreeNode node = findNode(key);
+        if (node == null) {
+            return;
+        }
+        TreeNode parent = parent(key);
+
+        if (node.left != null && node.right != null) {
+            TreeNode min = min(node.right);
+            remove(min.key);
+            node.key = min.key;
+            node.value = min.value;
+        } else {
+            if (node.left != null) {
+                if (parent.key.compareTo(key) < 0) {
+                    parent.right = node.left;
+                } else if (parent.key.compareTo(key) > 0) {
+                    parent.left = node.left;
+                }
+            } else if (node.right != null) {
+                if (parent.key.compareTo(key) < 0) {
+                    parent.right = node.right;
+                } else if (parent.key.compareTo(key) > 0) {
+                    parent.left = node.right;
+                }
             } else {
-                if (parent != null) {
-                    if (parent.key.compareTo(root.key) > 0) {
-                        parent.left = root;
-                    } else {
-                        parent.right = root;
-                    }
+                if (parent.key.compareTo(key) > 0) {
+                    parent.left = null;
+                }
+                if (parent.key.compareTo(key) < 0) {
+                    parent.right = null;
                 }
             }
-            root.parent = parent;
-        } else if (key.compareTo(root.key) < 0) {
-            insert(root.left, key, root);
-        } else if (key.compareTo(root.key) > 0) {
-            insert(root.right, key, root);
+            numberOfElements--;
         }
     }
 
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("===============\n");
-
-        Queue<TreeNode> q = new ConcurrentLinkedQueue<>();
-
-        q.add(root);
-
-        while (!q.isEmpty()) {
-            TreeNode n = q.peek();
-
-            q.remove();
-            result.append(String.format(n.key + ": "));
-            if (n.left != null) {
-                result.append(String.format("| left: " +  n.left.key));
-                q.add(n.left);
-            }
-            if (n.right != null) {
-                result.append(String.format("| right: " + n.right.key));
-                q.add(n.right);
-            }
-
-            result.append("\n");
+    private TreeNode min(TreeNode node) {
+        while (node.left != null) {
+            node = node.left;
         }
-
-        return result.toString();
+        return node;
     }
 
-    public void dsw() {
-        TreeNode newRoot = new TreeNode(null);
+    private TreeNode max(TreeNode node) {
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;
+    }
+
+    private TreeNode findNode(K key) {
+        TreeNode current = root;
+        int compare;
+        while (current != null) {
+            compare = key.compareTo(current.key);
+            if (compare == 0) {
+                return current;
+            }
+            if (compare < 0) {
+                current = current.left;
+            }
+            if (compare > 0) {
+                current = current.right;
+            }
+        }
+        return null;
+    }
+
+    public void makeComplete() {
+        dsw();
+    }
+
+    private void dsw() {
+        TreeNode newRoot = new TreeNode(null, null);
         newRoot.right = root;
         treeToVine(newRoot);
         vineToTree(newRoot, numberOfElements);
@@ -125,19 +186,71 @@ public class BinarySearchTree<T extends Comparable> {
         }
     }
 
-    private class TreeNode{
+    private TreeNode parent(K key) {
+        TreeNode parent = null;
+        TreeNode current = root;
+        int compare;
+        while (current != null) {
+            compare = key.compareTo(current.key);
+            if (compare == 0) {
+                return parent;
+            }
+            parent = current;
+            if (compare < 0) {
+                current = current.left;
+            }
+            if (compare > 0) {
+                current = current.right;
+            }
+        }
+        return null;
+    }
 
-        T key;
+    private class TreeNode {
+
+        K key;
+        V value;
         TreeNode left;
         TreeNode right;
-        TreeNode parent;
 
-        TreeNode(T data) {
-            this.key = data;
+        TreeNode(K key, V value) {
+            this.key = key;
+            this.value = value;
             left = null;
             right = null;
-            parent = null;
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("===============\n");
+        System.out.println("elements: " + numberOfElements);
+        if (root == null) {
+            return result.append("Tree is empty...").toString();
+        }
+
+        Queue<TreeNode> q = new ConcurrentLinkedQueue<>();
+
+        q.add(root);
+
+        while (!q.isEmpty()) {
+            TreeNode n = q.peek();
+
+            q.remove();
+            result.append(String.format(n.key + ": "));
+            if (n.left != null) {
+                result.append(String.format("| left: " + n.left.key));
+                q.add(n.left);
+            }
+            if (n.right != null) {
+                result.append(String.format("| right: " + n.right.key));
+                q.add(n.right);
+            }
+
+            result.append("\n");
+        }
+
+        return result.toString();
+    }
 }

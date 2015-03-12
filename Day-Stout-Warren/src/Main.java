@@ -16,40 +16,49 @@ public class Main {
 
     public static void main(String[] args) {
 
-        BinarySearchTree<String> stringTree = new BinarySearchTree<>();
+        BinarySearchTree<String, Integer> stringTree = new BinarySearchTree<>();
 
-        stringTree.insert("mitko");
-        stringTree.insert("pesho");
-        stringTree.insert("georgi");
-        stringTree.insert("ivan");
-        stringTree.insert("grozdan");
-        stringTree.insert("spas");
-        stringTree.insert("asdf");
-        stringTree.insert("zadasg");
-        stringTree.insert("fdhud");
+        stringTree.insert("mitko", 1);
+        stringTree.insert("pesho", 2);
+        stringTree.insert("georgi", 3);
+        stringTree.insert("ivan", 4);
+        stringTree.insert("grozdan", 5);
+        stringTree.insert("spas", 6);
+        stringTree.insert("asdf", 7);
+        stringTree.insert("zadasg", 8);
+        stringTree.insert("fdhud", 9);
+        stringTree.insert("dsa", 9);
 
         System.out.println("Before dsw...");
         System.out.println(stringTree);
 
-        stringTree.dsw();
+        stringTree.makeComplete();
 
         System.out.println("After dsw...");
         System.out.println(stringTree);
 
-        BinarySearchTree<Integer> intTree = new BinarySearchTree<>();
+        BinarySearchTree<Integer, Integer> intTree = new BinarySearchTree<>();
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 60; i++) {
             int k = rand.nextInt(100);
-            intTree.insert(k);
+            intTree.insert(k, k + 1);
         }
 
         System.out.println("Before dsw...");
         System.out.println(intTree);
 
-        intTree.dsw();
+        intTree.makeComplete();
 
         System.out.println("After dsw...");
         System.out.println(intTree);
+
+        System.out.println(intTree.contains(10));
+        System.out.println(stringTree.contains("mitko"));
+        System.out.println(stringTree.get("mitko"));
+        System.out.println(intTree.get(19));
+
+        stringTree.remove("mitko");
+        System.out.println(stringTree);
     }
 
 }
