@@ -176,7 +176,7 @@ public class TreapImpl implements Treap {
     }
 
     @Override
-    public String treverse() {
+    public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("===============\n");
 

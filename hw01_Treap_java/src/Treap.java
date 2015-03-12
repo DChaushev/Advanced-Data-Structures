@@ -56,5 +56,6 @@ public interface Treap {
      */
     public boolean containsKey(int key);
     
-    public String treverse();
+    @Override
+    public String toString();
 }

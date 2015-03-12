@@ -54,11 +54,11 @@ void Treap::insert(TreapNode*& root, int key, TreapNode*& parent) {
 void Treap::heapify(TreapNode& node) {
     TreapNode* parent = node.parent;
     if (&node != root && node.priority < parent->priority) {
-        if (parent->left == &node) {
+        if (&node == parent->left) {
             rotate_right(*node.parent);
             heapify(node);
         }
-        if (parent->right == &node) {
+        if (&node == parent->right) {
             rotate_left(*node.parent);
             heapify(node);
         }
@@ -176,7 +176,7 @@ void Treap::rotate_right(TreapNode& node) {
     if (n != 0) {
         n->parent = node.parent;
         if (n->parent != 0) {
-            if (n->parent->left == &node) {
+            if (&node == n->parent->left) {
                 n->parent->left = n;
             } else {
                 n->parent->right = n;
