@@ -22,19 +22,19 @@ public class BinarySearchTree<T extends Comparable> {
         numberOfElements = 0;
     }
 
-    public void insert(T data) {
-        insert(root, data, root);
+    public void insert(T key) {
+        insert(root, key, root);
     }
 
-    private void insert(TreeNode root, T data, TreeNode parent) {
+    private void insert(TreeNode root, T key, TreeNode parent) {
         if (root == null) {
-            root = new TreeNode(data);
+            root = new TreeNode(key);
             numberOfElements++;
             if (this.root == null) {
                 this.root = root;
             } else {
                 if (parent != null) {
-                    if (parent.data.compareTo(root.data) > 0) {
+                    if (parent.key.compareTo(root.key) > 0) {
                         parent.left = root;
                     } else {
                         parent.right = root;
@@ -42,10 +42,10 @@ public class BinarySearchTree<T extends Comparable> {
                 }
             }
             root.parent = parent;
-        } else if (data.compareTo(root.data) < 0) {
-            insert(root.left, data, root);
-        } else if (data.compareTo(root.data) > 0) {
-            insert(root.right, data, root);
+        } else if (key.compareTo(root.key) < 0) {
+            insert(root.left, key, root);
+        } else if (key.compareTo(root.key) > 0) {
+            insert(root.right, key, root);
         }
     }
 
@@ -62,13 +62,13 @@ public class BinarySearchTree<T extends Comparable> {
             TreeNode n = q.peek();
 
             q.remove();
-            result.append(String.format(n.data + ": "));
+            result.append(String.format(n.key + ": "));
             if (n.left != null) {
-                result.append(String.format("| left: " +  n.left.data));
+                result.append(String.format("| left: " +  n.left.key));
                 q.add(n.left);
             }
             if (n.right != null) {
-                result.append(String.format("| right: " + n.right.data));
+                result.append(String.format("| right: " + n.right.key));
                 q.add(n.right);
             }
 
@@ -127,13 +127,13 @@ public class BinarySearchTree<T extends Comparable> {
 
     private class TreeNode{
 
-        T data;
+        T key;
         TreeNode left;
         TreeNode right;
         TreeNode parent;
 
         TreeNode(T data) {
-            this.data = data;
+            this.key = data;
             left = null;
             right = null;
             parent = null;
