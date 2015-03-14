@@ -17,4 +17,9 @@ Treap - this is a hybrid between Binary Search Tree and Heap. Every node holds s
 Day-Stout-Warren algorithm - This algorithm is used to make from normal Binary Tree -> complete Binary Tree.<br/>
 <a href="http://en.wikipedia.org/wiki/Day%E2%80%93Stout%E2%80%93Warren_algorithm">http://en.wikipedia.org/wiki/Day-Stout-Warren_algorithm</a>
 </li>
+<li>
+AVL Tree - This is a balanced binary tree. I am given an interface and some tests and I must implement insert(), delete() and find() operations. <br/>
+<a href="http://en.wikipedia.org/wiki/AVL_tree">http://en.wikipedia.org/wiki/AVL_tree</a><br/>
+I found this site to be very usefull: <a href="https://www.cs.usfca.edu/~galles/visualization/AVLtree.html">check it out</a>
+</li>
 </ul>
