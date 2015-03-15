@@ -28,3 +28,5 @@
 *.app
 /hw01_Treap_java/nbproject/private/
 /hw01_Treap_java/build/
+/hw02_AVL-Tree_java/nbproject/private/
+/hw02_AVL-Tree_java/build/

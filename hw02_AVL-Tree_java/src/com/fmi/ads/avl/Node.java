@@ -14,12 +14,4 @@ public class Node<T extends Comparable<T>> {
     public int height;
     public T value;
 
-    /* I'll add a constructor
-     * added by Dimitar Chaushev
-     */
-    public Node(T value) {
-        this.value = value;
-        this.height = 1;
-    }
-
 }

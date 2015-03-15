@@ -66,7 +66,9 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
                 current = current.rightChild;
             }
         }
-        Node<T> newNode = new Node(value);
+        Node<T> newNode = new Node();
+        newNode.value = value;
+        newNode.height = 1;
         newNode.parent = parent;
         if (parent == null) {
             this.root = newNode;
@@ -81,13 +83,55 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
 
     @Override
     public void deleteNode(T value) {
+        Node<T> node = findNode(value);
+        if (node == null) {
+            return;
+        }
+        Node<T> parent = node.parent;
+
+        if (node.leftChild != null && node.rightChild != null) {
+            Node<T> min = min(node.rightChild);
+            deleteNode(min.value);
+            node.value = min.value;
+        } else {
+            if (node.leftChild != null) {
+                if (parent.value.compareTo(value) < 0) {
+                    parent.rightChild = node.leftChild;
+                } else if (parent.value.compareTo(value) > 0) {
+                    parent.leftChild = node.leftChild;
+                }
+            } else if (node.rightChild != null) {
+                if (parent.value.compareTo(value) < 0) {
+                    parent.rightChild = node.rightChild;
+                } else if (parent.value.compareTo(value) > 0) {
+                    parent.leftChild = node.rightChild;
+                }
+            } else {
+                if (parent.value.compareTo(value) > 0) {
+                    parent.leftChild = null;
+                }
+                if (parent.value.compareTo(value) < 0) {
+                    parent.rightChild = null;
+                }
+            }
+            updateHeight(parent);
+            avl(parent);
+            size--;
+        }
+    }
+    
+        private Node<T> min(Node<T> node) {
+        while (node.leftChild != null) {
+            node = node.leftChild;
+        }
+        return node;
     }
 
     private void avl(Node<T> node) {
         if (node.parent == null) {
             return;
         }
-        Node<T> ancestor = node.parent;
+        Node<T> ancestor = node;
         while (ancestor != null) {
             updateHeight(ancestor);
 
