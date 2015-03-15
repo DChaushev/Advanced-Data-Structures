@@ -1,5 +1,7 @@
 package com.fmi.ads.avl;
 
+import java.util.Stack;
+
 /**
  * Implement your solution here.
  *
@@ -18,8 +20,40 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
     public AVLTree() {
     }
 
+    /**
+     * I am using Depth first search to traverse through all of the nodes in the
+     * tree. For each node set left, right and parent to null.
+     *
+     * @throws Throwable
+     */
     @Override
     public void finalize() throws Throwable {
+
+        try {
+            Stack<Node<T>> s = new Stack<>();
+
+            if (root != null) {
+                s.add(root);
+            }
+
+            while (!s.empty()) {
+
+                Node<T> node = s.pop();
+
+                if (node.leftChild != null) {
+                    s.add(node.leftChild);
+                }
+                if (node.rightChild != null) {
+                    s.add(node.rightChild);
+                }
+
+                node.leftChild = null;
+                node.rightChild = null;
+                node.parent = null;
+            }
+        } finally {
+            super.finalize();
+        }
     }
 
     @Override
@@ -27,6 +61,12 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         return size;
     }
 
+    /**
+     * Binary searches the tree for the given value, starting from the root.
+     *
+     * @param value
+     * @return The node if such value exists. Null otherwise.
+     */
     @Override
     public Node<T> findNode(T value) {
         Node<T> current = root;
@@ -46,6 +86,16 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         return null;
     }
 
+    /**
+     * Binary searches for the place of the new node. If such value exists, it
+     * overwrites it. End.
+     *
+     * If it is a new value, it is inserted at the right place. Then we go up to
+     * the root, checking for every node up if the balance is kept.
+     *
+     * @see #avl(com.fmi.ads.avl.Node)
+     * @param value
+     */
     @Override
     public void insertNode(T value) {
         Node<T> parent = null;
@@ -78,6 +128,19 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         size++;
     }
 
+    /**
+     * Delete by the same way like in a normal binary tree. <br/>
+     * 1) If the node has no children - just remove it. <br/>
+     * 2) If it has one child - connect the parent with the child. <br/>
+     * 3) If it has two children - find the biggest node from it's left subtree.
+     * ...Transfer it's value to the node you want to delete and delete it
+     * instead. <br/>
+     *
+     * Then go up to the root to check for disbalance. <br/>
+     *
+     * @see #avl(com.fmi.ads.avl.Node)
+     * @param value
+     */
     @Override
     public void deleteNode(T value) {
         Node<T> node = findNode(value);
@@ -118,6 +181,12 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         }
     }
 
+    /**
+     * Finds the biggest node in a given subtree.
+     *
+     * @param node
+     * @return
+     */
     private Node<T> max(Node<T> node) {
         while (node.rightChild != null) {
             node = node.rightChild;
@@ -125,6 +194,17 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         return node;
     }
 
+    /**
+     * I didn't come with a better name for that method. <br/>
+     * It takes a node as a parameter. <br/>
+     * Then from it goes up to the root and checks for every node if the balance
+     * is kept. <br/>
+     * If yes - continue up. <br/>
+     * If not - perform the corresponding rotations to fix it. <br/>
+     *
+     * @see #rotateUp(com.fmi.ads.avl.Node)
+     * @param node
+     */
     private void avl(Node<T> node) {
 
         Node<T> ancestor = node;
@@ -135,23 +215,23 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
 
             int balance = getBalance(ancestor);
 
-            // left left
+            // Left Left Rotation
             if (balance > 1 && getBalance(ancestor.leftChild) >= 0) {
                 rotateUp(ancestor.leftChild);
                 return;
             }
-            // right right
+            // Right Right Rotation
             if (balance < -1 && getBalance(ancestor.rightChild) <= 0) {
                 rotateUp(ancestor.rightChild);
                 return;
             }
-            // left right
+            // Left Right Rotation
             if (balance > 1 && getBalance(ancestor.leftChild) < 0) {
                 rotateUp(ancestor.leftChild.rightChild);
                 rotateUp(ancestor.leftChild);
                 return;
             }
-            // right left
+            // Right Left Rotation
             if (balance < -1 && getBalance(ancestor.rightChild) > 0) {
                 rotateUp(ancestor.rightChild.leftChild);
                 rotateUp(ancestor.rightChild);
@@ -161,6 +241,26 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         }
     }
 
+    /**
+     * Instead of rotateLeft() and rotateRight() methods I decided to combine
+     * them in this one. <br/>
+     *
+     * I'm using x and y instead of full names because it is more readable for
+     * me. At the beginning x is the node we want to rotate, and y is it's
+     * parent. After the rotation - x is the parent of y.
+     * <PRE>
+     *      y                  x
+     *    /                      \
+     *  x                          y
+     *    \          <->         /
+     *      *                  *
+     *     * *                * *
+     *    * * *              * * *
+     * rotateUp(x)         rotateUp(y)
+     * </PRE>
+     *
+     * @param x
+     */
     private void rotateUp(Node<T> x) {
         Node<T> y = x.parent;
         x.parent = y.parent;
@@ -195,12 +295,25 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
 
     }
 
+    /**
+     * Updates the height of a given node.
+     *
+     * The height is equal to 1 + the max of the heights of it's children.
+     *
+     * @param node
+     */
     private void updateHeight(Node<T> node) {
         int leftHeight = node.leftChild == null ? 0 : node.leftChild.height;
         int righHeight = node.rightChild == null ? 0 : node.rightChild.height;
         node.height = 1 + Math.max(leftHeight, righHeight);
     }
 
+    /**
+     * The balance of a given node = height(leftChild) - height(rightChild)
+     *
+     * @param node
+     * @return the calculated balance
+     */
     private int getBalance(Node<T> node) {
         if (node == null) {
             return 0;
@@ -208,6 +321,11 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         return height(node.leftChild) - height(node.rightChild);
     }
 
+    /**
+     *
+     * @param node
+     * @return the height of the given node
+     */
     private int height(Node<T> node) {
         if (node == null) {
             return 0;
