@@ -90,7 +90,7 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         Node<T> parent = node.parent;
 
         if (node.leftChild != null && node.rightChild != null) {
-            Node<T> min = min(node.rightChild);
+            Node<T> min = max(node.leftChild);
             deleteNode(min.value);
             node.value = min.value;
         } else {
@@ -114,25 +114,23 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
                     parent.rightChild = null;
                 }
             }
-            updateHeight(parent);
-            avl(parent);
+            avl(node);
             size--;
         }
     }
-    
-        private Node<T> min(Node<T> node) {
-        while (node.leftChild != null) {
-            node = node.leftChild;
+
+    private Node<T> max(Node<T> node) {
+        while (node.rightChild != null) {
+            node = node.rightChild;
         }
         return node;
     }
 
     private void avl(Node<T> node) {
-        if (node.parent == null) {
-            return;
-        }
+
         Node<T> ancestor = node;
         while (ancestor != null) {
+
             updateHeight(ancestor);
 
             int balance = getBalance(ancestor);
