@@ -1,8 +1,5 @@
 package com.fmi.ads.avl;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 /**
  * Implement your solution here.
  *
@@ -100,12 +97,14 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
                 } else if (parent.value.compareTo(value) > 0) {
                     parent.leftChild = node.leftChild;
                 }
+                node.leftChild.parent = parent;
             } else if (node.rightChild != null) {
                 if (parent.value.compareTo(value) < 0) {
                     parent.rightChild = node.rightChild;
                 } else if (parent.value.compareTo(value) > 0) {
                     parent.leftChild = node.rightChild;
                 }
+                node.rightChild.parent = parent;
             } else {
                 if (parent.value.compareTo(value) > 0) {
                     parent.leftChild = null;
@@ -129,6 +128,7 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
     private void avl(Node<T> node) {
 
         Node<T> ancestor = node;
+
         while (ancestor != null) {
 
             updateHeight(ancestor);
@@ -161,7 +161,7 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         }
     }
 
-    private Node<T> rotateUp(Node<T> x) {
+    private void rotateUp(Node<T> x) {
         Node<T> y = x.parent;
         x.parent = y.parent;
 
@@ -193,7 +193,6 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         updateHeight(y);
         updateHeight(x);
 
-        return x;
     }
 
     private void updateHeight(Node<T> node) {
@@ -216,39 +215,4 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
         return node.height;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("===============\n");
-        System.out.println("elements: " + size);
-        if (root == null) {
-            return result.append("Tree is empty...").toString();
-        }
-
-        Queue<Node<T>> q = new ConcurrentLinkedQueue<>();
-
-        q.add(root);
-
-        while (!q.isEmpty()) {
-            Node<T> n = q.peek();
-
-            q.remove();
-            result.append(String.format(n.value + ": "));
-            if (n.leftChild != null) {
-                result.append(String.format("| left: " + n.leftChild.value));
-                q.add(n.leftChild);
-            }
-            if (n.rightChild != null) {
-                result.append(String.format("| right: " + n.rightChild.value));
-                q.add(n.rightChild);
-            }
-            if (n.parent != null) {
-                result.append(String.format("  |  parent: " + n.parent.value));
-            }
-
-            result.append("\n");
-        }
-
-        return result.toString();
-    }
 }
