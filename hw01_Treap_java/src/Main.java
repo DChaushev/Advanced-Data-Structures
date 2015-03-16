@@ -14,7 +14,8 @@ public class Main {
 
     static Random rand = new Random();
 
-    private static void stressInsert(Treap treap, int n){
+    private static void stressInsert(int n){
+        Treap treap = new TreapImpl();
         System.out.println(String.format("Starting inserting %d elements: ", n));
         long start = System.currentTimeMillis();
         for (int i = 0; i < n; i++) {
@@ -50,10 +51,11 @@ public class Main {
         System.out.println(treap);
         System.out.println(treap.containsKey(6));
         
-        stressInsert(treap, 1_000_000);
-        stressInsert(treap, 4_000_000);
-        stressInsert(treap, 8_000_000);
-        stressInsert(treap, 16_000_000);
+        stressInsert(2_000_000);
+        stressInsert(4_000_000);
+        stressInsert(8_000_000);
+        stressInsert(16_000_000);
+        stressInsert(32_000_000);
         
     }
 }
