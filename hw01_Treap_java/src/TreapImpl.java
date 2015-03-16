@@ -21,49 +21,47 @@ public class TreapImpl implements Treap {
 
     @Override
     public void insert(int key) {
-        insert(root, key, root);
-    }
-
-    private void insert(TreapNode root, int key, TreapNode parent) {
-        if (root == null) {
-            root = new TreapNode(key);
-            if (this.root == null) {
-                this.root = root;
+        TreapNode parent = null;
+        TreapNode current = root;
+        while (current != null) {
+            parent = current;
+            if (key == current.key) {
+                return;
+            } else if (key < current.key) {
+                current = current.left;
             } else {
-                if (parent != null) {
-                    if (parent.key > root.key) {
-                        parent.left = root;
-                    } else {
-                        parent.right = root;
-                    }
-                }
+                current = current.right;
             }
-            root.parent = parent;
-            heapify(root);
-        } else if (key < root.key) {
-            insert(root.left, key, root);
-        } else if (key > root.key) {
-            insert(root.right, key, root);
+        }
+        TreapNode newNode = new TreapNode(key);
+        newNode.parent = parent;
+        if (parent == null) {
+            root = newNode;
+        } else if (key < parent.key) {
+            parent.left = newNode;
+            heapify(newNode);
+        } else {
+            parent.right = newNode;
+            heapify(newNode);
         }
     }
 
     private void heapify(TreapNode node) {
         TreapNode parent = node.parent;
-        if (node != root && node.priority < parent.priority) {
+        while (node != root && node.priority < parent.priority) {
             if (parent.left == node) {
                 rotateRight(node.parent);
-                heapify(node);
             }
             if (parent.right == node) {
                 rotateLeft(node.parent);
-                heapify(node);
             }
+            parent = node.parent;
         }
     }
 
     @Override
     public void remove(int key) {
-        TreapNode node = findNode(root, key);
+        TreapNode node = findNode(key);
         if (node != null) {
             while (!(node.left == null && node.right == null)) {
                 if (node.left == null) {
@@ -88,41 +86,25 @@ public class TreapImpl implements Treap {
         }
     }
 
-    private TreapNode findNode(TreapNode root, int key) {
-        if (root == null) {
-            return null;
-        }
-        if (root.key == key) {
-            return root;
-        }
-        if (key < root.key) {
-            return findNode(root.left, key);
-        }
-        if (key > root.key) {
-            return findNode(root.right, key);
+    private TreapNode findNode(int key) {
+        TreapNode current = root;
+        while (current != null) {
+            if (key == current.key) {
+                return current;
+            }
+            else if (key < current.key) {
+                current = current.left;
+            }
+            else {
+                current = current.right;
+            }
         }
         return null;
     }
 
     @Override
     public boolean containsKey(int key) {
-        return containsKey(root, key);
-    }
-
-    private boolean containsKey(TreapNode root, int key) {
-        if (root == null) {
-            return false;
-        }
-        if (root.key == key) {
-            return true;
-        }
-        if (key < root.key) {
-            return containsKey(root.left, key);
-        }
-        if (key > root.key) {
-            return containsKey(root.right, key);
-        }
-        return false;
+        return findNode(key) != null;
     }
 
     private void rotateLeft(TreapNode node) {
