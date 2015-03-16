@@ -15,10 +15,9 @@ Treap::Treap() {
 }
 
 Treap::~Treap() {
-    std::cout << "\ndeleting the treap..." << std::endl;
-    int cnt = 0;
     std::queue<TreapNode*> s;
-    s.push(root);
+    if (root != 0)
+        s.push(root);
 
     while (!s.empty()) {
         TreapNode* n = s.front();
@@ -29,39 +28,46 @@ Treap::~Treap() {
             s.push(n->right);
 
         delete(n);
-        cnt++;
     }
-    std::cout << "done. " << cnt << " nodes deleted." << std::endl;
 }
 
 void Treap::insert(int key) {
-    insert(root, key, root);
+    TreapNode* parent = 0;
+    TreapNode* current = root;
+    while (current != 0) {
+        parent = current;
+        if (key == current->key) {
+            return;
+        } else if (key < current->key) {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+    }
+    TreapNode* newNode = new TreapNode(key);
+    newNode->parent = parent;
+    if (parent == 0) {
+        root = newNode;
+    } else if (key < parent->key) {
+        parent->left = newNode;
+        heapify(*newNode);
+    } else {
+        parent->right = newNode;
+        heapify(*newNode);
+    }
 }
 
-void Treap::insert(TreapNode*& root, int key, TreapNode*& parent) {
-    if (!root) {
-        root = new TreapNode(key);
-        if (this->root == root)
-            root->parent = 0;
-        else root->parent = parent;
-        heapify(*root);
-    } else if (key < root->key)
-        insert(root->left, key, root);
-    else if (key > root->key)
-        insert(root->right, key, root);
-}
 
 void Treap::heapify(TreapNode& node) {
     TreapNode* parent = node.parent;
-    if (&node != root && node.priority < parent->priority) {
+    while (&node != root && node.priority < parent->priority) {
         if (&node == parent->left) {
             rotate_right(*node.parent);
-            heapify(node);
         }
         if (&node == parent->right) {
             rotate_left(*node.parent);
-            heapify(node);
         }
+        parent = node.parent;
     }
 }
 

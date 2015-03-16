@@ -16,13 +16,13 @@ public class Main {
 
     private static void stressInsert(int n){
         Treap treap = new TreapImpl();
-        System.out.println(String.format("Starting inserting %d elements: ", n));
+        System.out.println(String.format("Inserting %d elements: ", n));
         long start = System.currentTimeMillis();
         for (int i = 0; i < n; i++) {
             treap.insert(i);
         }
         long end = System.currentTimeMillis();
-        System.out.println(end - start);
+        System.out.println(end - start + " ms");
     }
     
     public static void main(String[] args) {
