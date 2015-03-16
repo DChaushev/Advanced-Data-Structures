@@ -57,7 +57,6 @@ void Treap::insert(int key) {
     }
 }
 
-
 void Treap::heapify(TreapNode& node) {
     TreapNode* parent = node.parent;
     while (&node != root && node.priority < parent->priority) {
@@ -98,7 +97,7 @@ void Treap::treverse() {
 }
 
 void Treap::remove(int key) {
-    TreapNode* node = findNode(*root, key);
+    TreapNode* node = findNode(key);
     if (node != 0) {
         while (!(node->left == 0 && node->right == 0)) {
             if (node->left == 0) {
@@ -124,31 +123,22 @@ void Treap::remove(int key) {
     }
 }
 
-TreapNode* Treap::findNode(TreapNode &root, int key) {
-    if (&root == 0)
-        return 0;
-
-    if (root.key == key)
-        return &root;
-    if (key < root.key)
-        return findNode(*root.left, key);
-    if (key > root.key)
-        return findNode(*root.right, key);
+TreapNode* Treap::findNode(int key) const{
+    TreapNode* current = root;
+    while (current != 0) {
+        if (key == current->key) {
+            return current;
+        } else if (key < current->key) {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+    }
+    return 0;
 }
 
 bool Treap::containsKey(int key) const {
-    return containsKey(*root, key);
-}
-
-bool Treap::containsKey(const TreapNode& root, const int key) const {
-    if (&root == 0) return false;
-
-    if (root.key == key)
-        return true;
-    if (key < root.key)
-        return containsKey(*root.left, key);
-    if (key > root.key)
-        return containsKey(*root.right, key);
+    return findNode(key) != 0;
 }
 
 void Treap::rotate_left(TreapNode& node) {

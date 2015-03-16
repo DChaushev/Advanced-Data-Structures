@@ -69,24 +69,6 @@ private:
     void rotate_right(TreapNode& node);
 
     /**
-     * Binary searches the position, where should the new node be inserted.
-     * 
-     * @param root Node for comparison.
-     * @param key  The new node's key.
-     * @param parent When we finally insert the new node, to mark his parent.
-     */
-    void insert(TreapNode*& root, int key, TreapNode*& parent);
-
-    /**
-     * Binary searches for node with the given key.
-     * 
-     * @param root Node for comparison.
-     * @param key  The key we're searching for.
-     * @return true if such node exists, false if not.
-     */
-    bool containsKey(const TreapNode& root, const int key) const;
-
-    /**
      * Comes from the famous heap function's name.
      * After inserting new node, we call this function, to 
      * arrange the nodes by their priorities.
@@ -101,11 +83,10 @@ private:
      * It is the same, only that this returns the node, if
      * such exists.
      * 
-     * @param root
      * @param key
      * @return 
      */
-    TreapNode* findNode(TreapNode& root, const int key);
+    TreapNode* findNode(const int key) const;
 
     Treap& operator=(const Treap&); // Do not implement me!
     Treap(const Treap&); // Do not implement me!

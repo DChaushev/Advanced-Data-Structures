@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
     stressInsert(8000000);
     stressInsert(16000000);
     stressInsert(32000000);
+    stressInsert(64000000);
 
 
 //        treap.insert(6);
