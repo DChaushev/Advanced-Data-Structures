@@ -75,8 +75,10 @@ void Treap::treverse() {
     std::cout << "=============" << std::endl;
 
     std::queue<TreapNode*> q;
-    q.push(root);
-
+    if (root != 0) {
+        q.push(root);
+    }
+    
     while (!q.empty()) {
         TreapNode* n = q.front();
 
@@ -123,7 +125,7 @@ void Treap::remove(int key) {
     }
 }
 
-TreapNode* Treap::findNode(int key) const{
+TreapNode* Treap::findNode(int key) const {
     TreapNode* current = root;
     while (current != 0) {
         if (key == current->key) {

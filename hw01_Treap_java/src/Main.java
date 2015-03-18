@@ -29,6 +29,7 @@ public class Main {
 
 //        Treap treap = new TreapImpl();
 //
+//
 //        treap.insert(6);
 //        System.out.println(treap);
 //        treap.insert(2);
@@ -56,6 +57,8 @@ public class Main {
         stressInsert(8_000_000);
         stressInsert(16_000_000);
         stressInsert(48_000_000);
+        stressInsert(50_000_000);
+        
         
     }
 }

@@ -80,13 +80,17 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
             node.value = min.value;
         } else {
             if (node.left != null) {
-                if (parent.key.compareTo(key) < 0) {
+                if(parent == null){
+                    root = node.left;
+                } else if (parent.key.compareTo(key) < 0) {
                     parent.right = node.left;
                 } else if (parent.key.compareTo(key) > 0) {
                     parent.left = node.left;
                 }
             } else if (node.right != null) {
-                if (parent.key.compareTo(key) < 0) {
+                if(parent == null){
+                    root = node.right;
+                } else if (parent.key.compareTo(key) < 0) {
                     parent.right = node.right;
                 } else if (parent.key.compareTo(key) > 0) {
                     parent.left = node.right;

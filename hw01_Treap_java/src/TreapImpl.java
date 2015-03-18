@@ -91,11 +91,9 @@ public class TreapImpl implements Treap {
         while (current != null) {
             if (key == current.key) {
                 return current;
-            }
-            else if (key < current.key) {
+            } else if (key < current.key) {
                 current = current.left;
-            }
-            else {
+            } else {
                 current = current.right;
             }
         }
@@ -164,7 +162,9 @@ public class TreapImpl implements Treap {
 
         Queue<TreapNode> q = new ConcurrentLinkedQueue<>();
 
-        q.add(root);
+        if (root != null) {
+            q.add(root);
+        }
 
         while (!q.isEmpty()) {
             TreapNode n = q.peek();
