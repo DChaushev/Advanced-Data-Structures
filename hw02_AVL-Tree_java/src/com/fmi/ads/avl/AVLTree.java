@@ -175,10 +175,13 @@ public class AVLTree<T extends Comparable<T>> extends AVLTreeInterface<T> {
                 }
                 node.rightChild.parent = parent;
             } else {
-                if (parent.value.compareTo(value) > 0) {
+                if(node == root){
+                    root = null;
+                }
+                else if (parent != null && parent.value.compareTo(value) > 0) {
                     parent.leftChild = null;
                 }
-                if (parent.value.compareTo(value) < 0) {
+                else if (parent != null && parent.value.compareTo(value) < 0) {
                     parent.rightChild = null;
                 }
             }

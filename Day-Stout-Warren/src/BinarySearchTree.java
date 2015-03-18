@@ -96,10 +96,13 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
                     parent.left = node.right;
                 }
             } else {
-                if (parent.key.compareTo(key) > 0) {
+                if(node == root){
+                    root = null;
+                }
+                else if (parent.key.compareTo(key) > 0) {
                     parent.left = null;
                 }
-                if (parent.key.compareTo(key) < 0) {
+                else if (parent.key.compareTo(key) < 0) {
                     parent.right = null;
                 }
             }
