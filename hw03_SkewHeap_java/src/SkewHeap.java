@@ -1,4 +1,5 @@
 
+import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -52,20 +53,25 @@ public class SkewHeap {
      * This method removes and returns the smallest element in the current skew
      * heap.
      *
-     * @returns the removed element
+     * @return the removed element
      *
-     * @throws Exception if there are no elements, but minimum was tried to be
-     * removed
+     * @throws NoSuchElementException if there are no elements, but minimum was
+     * tried to be removed
      */
     public int removeMin() {
-        // Implement me...
-        return -1;
+        if (!empty()) {
+            int min = this.root.value;
+            this.root = merge(root.left, root.right);
+            return min;
+        } else {
+            throw new NoSuchElementException("The heap is empty!");
+        }
     }
 
     /**
      * Tests whether there are any elements in the current heap.
      *
-     * @returns true, if there are any elements and false, otherwise
+     * @return true, if there are any elements and false, otherwise
      */
     public boolean empty() {
         return root == null;
@@ -90,7 +96,7 @@ public class SkewHeap {
      *
      * @param root2: reference to the root of the second skew heap
      *
-     * @returns a reference to the root of the merged data structure
+     * @return a reference to the root of the merged data structure
      */
     private Node merge(Node root1, Node root2) {
 
@@ -103,7 +109,7 @@ public class SkewHeap {
             return firstRoot;
         }
 
-        if (firstRoot.value < secondRoot.value) {
+        if (firstRoot.value <= secondRoot.value) {
             Node temp = firstRoot.right;
             firstRoot.right = firstRoot.left;
             firstRoot.left = merge(secondRoot, temp);
