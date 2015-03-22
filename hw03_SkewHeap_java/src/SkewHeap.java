@@ -68,8 +68,7 @@ public class SkewHeap {
      * @returns true, if there are any elements and false, otherwise
      */
     public boolean empty() {
-        // Implement me...
-        return false;
+        return root == null;
     }
 
     /**
@@ -80,7 +79,7 @@ public class SkewHeap {
      * merged with the current one
      */
     public void merge(SkewHeap other) {
-        // Implement me...
+        this.root = merge(this.root, other.root);
     }
 
     /**
