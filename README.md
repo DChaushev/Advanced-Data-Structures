@@ -26,4 +26,8 @@ I found this site to be very usefull: <a href="https://www.cs.usfca.edu/~galles/
 Splay Tree - This is a binary tree, that keeps as root the last element, operated with (last inserted, last searched for, parent of deleted). The idea is that like in the cache - if you are searching for something - there's a probability you'll search for it again!<br/>
 http://en.wikipedia.org/wiki/Splay_tree
 </li>
+<li>
+Skew Heap - Heap-ordered binary tree or self-adjusting version of leftist heap.<br/>
+http://en.wikipedia.org/wiki/Skew_heap
+</li>
 </ul>
