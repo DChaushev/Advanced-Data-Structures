@@ -1,7 +1,5 @@
 
 import java.util.NoSuchElementException;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -118,36 +116,5 @@ public class SkewHeap {
             return merge(secondRoot, firstRoot);
         }
 
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("===============\n");
-
-        Queue<Node> q = new ConcurrentLinkedQueue<>();
-
-        if (root != null) {
-            q.add(root);
-        }
-
-        while (!q.isEmpty()) {
-            Node n = q.peek();
-
-            q.remove();
-            result.append(String.format("%d:  ", n.value));
-            if (n.left != null) {
-                result.append(String.format(" left: %d ", n.left.value));
-                q.add(n.left);
-            }
-            if (n.right != null) {
-                result.append(String.format(" right: %d ", n.right.value));
-                q.add(n.right);
-            }
-
-            result.append("\n");
-        }
-
-        return result.toString();
     }
 }
