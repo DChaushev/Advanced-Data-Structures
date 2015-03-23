@@ -24,10 +24,7 @@ public class SkewHeapTest {
     public SkewHeapTest() {
     }
 
-    @Before
-    public void setUp() {
-        heap = new SkewHeap();
-        list = new ArrayList<>();
+    private void fillList() {
         list.add(19);
         list.add(19);
         list.add(12);
@@ -39,7 +36,12 @@ public class SkewHeapTest {
         list.add(-1);
         list.add(3);
         list.add(-10);
+    }
 
+    @Before
+    public void setUp() {
+        heap = new SkewHeap();
+        list = new ArrayList<>();
     }
 
     @After
@@ -71,7 +73,7 @@ public class SkewHeapTest {
 
     @Test(expected = NoSuchElementException.class)
     public void removeMinTest() {
-
+        fillList();
         list.forEach(value -> heap.add(value));
         list.sort(null);
 
@@ -84,7 +86,7 @@ public class SkewHeapTest {
 
     @Test
     public void mergeHeapsTest() {
-
+        fillList();
         SkewHeap heap2 = new SkewHeap();
 
         for (int i = 0; i < list.size(); i++) {
