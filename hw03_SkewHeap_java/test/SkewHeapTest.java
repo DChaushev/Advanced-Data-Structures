@@ -105,6 +105,11 @@ public class SkewHeapTest {
             assertEquals(heap.removeMin(), (int) value);
         });
 
+        assertTrue(heap2.empty());
     }
 
+    @Test
+    public void mergeWithNullTest() {
+        heap.merge(null);
+    }
 }

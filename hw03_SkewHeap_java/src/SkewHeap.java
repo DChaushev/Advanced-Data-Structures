@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
  * @author Dimitar
  *
  * Data type that represents a min-heap implementation of Skew heap data
- * stucture
+ * structure
  */
 public class SkewHeap {
 
@@ -69,7 +69,7 @@ public class SkewHeap {
     /**
      * Tests whether there are any elements in the current heap.
      *
-     * @return true, if there are any elements and false, otherwise
+     * @return true, if there aren't any elements and false, otherwise
      */
     public boolean empty() {
         return root == null;
@@ -83,7 +83,12 @@ public class SkewHeap {
      * merged with the current one
      */
     public void merge(SkewHeap other) {
-        this.root = merge(this.root, other.root);
+        if (other != null) {
+            this.root = merge(this.root, other.root);
+            other.root = null;
+        }
+        //  I would usually throw NullPointerException here, but is not explicitly
+        //  said to do so.
     }
 
     /**
@@ -115,6 +120,5 @@ public class SkewHeap {
         } else {
             return merge(secondRoot, firstRoot);
         }
-
     }
 }
