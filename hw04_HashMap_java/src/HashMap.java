@@ -22,8 +22,10 @@ import java.util.List;
  */
 public class HashMap<V> {
 
+    private final int BASE = 257;
+    private int MOD;
     private final float LOAD_FACTOR = 0.75f;
-    private long maxElementsAlowed;
+    private int maxElementsAlowed;
     private List<MapEntry> buckets;
 
     public HashMap() {
@@ -33,9 +35,9 @@ public class HashMap<V> {
 
     private class MapEntry {
 
-        final int hash;
-        String key;
-        V value;
+        private final int hash;
+        private String key;
+        private V value;
 
         public MapEntry(int hash, String key, V value) {
             this.hash = hash;
@@ -58,6 +60,36 @@ public class HashMap<V> {
         public int getHash() {
             return this.hash;
         }
+    }
+
+    private int generateHash(String str) {
+        int ret = 1;
+        for (int i = 0; i < (int) str.length(); i++) {
+            ret = (ret * BASE + str.charAt(i)) % MOD;
+        }
+        return ret;
+    }
+
+    boolean isPrime(int n) {
+        if (n % 2 == 0) {
+            return false;
+        }
+        for (int i = 3; i * i <= n; i += 2) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int getNextPrime(int n) {
+        int i = n;
+        for (; i < 2 * n; ++i) {
+            if (isPrime(i)) {
+                break;
+            }
+        }
+        return i;
     }
 
     /**
@@ -110,6 +142,11 @@ public class HashMap<V> {
      */
     public void insert(String key, V value) {
         // TODO: implement
+        // ...
+        //after insertion check the load
+        if (this.buckets.size() / maxElementsAlowed >= LOAD_FACTOR) {
+            resize(maxElementsAlowed * 2);
+        }
     }
 
     /**
@@ -118,6 +155,11 @@ public class HashMap<V> {
      */
     public void erase(String key) {
         // TODO: implement
+        // ...
+        //after deletion check the load
+//        if (this.buckets.size() / maxElementsAlowed <= 1 - LOAD_FACTOR) {
+//            resize(maxElementsAlowed / 2);
+//        }
     }
 
     /**
