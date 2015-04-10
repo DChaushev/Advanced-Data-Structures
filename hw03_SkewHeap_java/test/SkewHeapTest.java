@@ -80,7 +80,7 @@ public class SkewHeapTest {
         list.forEach(value -> {
             assertEquals(heap.removeMin(), (int) value);
         });
-
+        assertTrue(heap.empty());
         heap.removeMin();
     }
 
@@ -105,6 +105,7 @@ public class SkewHeapTest {
             assertEquals(heap.removeMin(), (int) value);
         });
 
+        assertTrue(heap.empty());
         assertTrue(heap2.empty());
     }
 

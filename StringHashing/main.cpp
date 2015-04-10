@@ -13,7 +13,7 @@
 using namespace std;
 
 string NAMES[] = {"pesho", "pesh", "gosho", "mitko", "asdasd", "fdwnwe",
-    "ivan", "ivanka", "petkan", "aaaaaab", "aaaaaa"};
+    "ivan", "ivanka", "petkan", "aaaaaab", "aaaaaa", "nababatiHvur4iloto123_"};
 
 void testMap(HashMap*& map);
 
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
         map->put(name, x);
         x += 21;
     }
-
+    
     testMap(map);
 
     cout << "========== DELETE ==========" << endl;
