@@ -1,4 +1,5 @@
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,20 +23,32 @@ import java.util.List;
  */
 public class HashMap<V> {
 
-    private final int BASE = 257;
+    private final int BASE = 127;
+    private final double LOAD_FACTOR = 0.75;
+
+    private int numberOfElements;
+
     private int MOD;
-    private final float LOAD_FACTOR = 0.75f;
-    private int maxElementsAlowed;
-    private List<MapEntry> buckets;
+    private int capacity;
+    private List<MapEntry>[] buckets;
+    private int binaryPower = 4;
 
     public HashMap() {
-        maxElementsAlowed = 1 << 4;
-        buckets = new ArrayList<>(1 << 4);
+        init(binaryPower);
+    }
+
+    private MapEntry bucketContainsKey(List<MapEntry> bucket, String key) {
+        for (MapEntry element : bucket) {
+            if (element.getKey().equals(key)) {
+                return element;
+            }
+        }
+        return null;
     }
 
     private class MapEntry {
 
-        private final int hash;
+        private int hash;
         private String key;
         private V value;
 
@@ -62,10 +75,20 @@ public class HashMap<V> {
         }
     }
 
+    private void init(int power) {
+        binaryPower = power;
+        MOD = getNextPrime(1 << power);
+        capacity = MOD;
+        buckets = new List[MOD + 1];
+        numberOfElements = 0;
+        System.out.println("Capacity: " + capacity);
+        System.out.println("MOD: " + MOD);
+    }
+
     private int generateHash(String str) {
         int ret = 1;
         for (int i = 0; i < (int) str.length(); i++) {
-            ret = (ret * BASE + str.charAt(i)) % MOD;
+            ret = (int) (((long) ret * BASE + str.charAt(i))) % MOD;
         }
         return ret;
     }
@@ -98,7 +121,17 @@ public class HashMap<V> {
      * numBuckets)
      */
     public void resize(int numBuckets) {
-        // TODO: implement
+        List<MapEntry> entries = new ArrayList<>(capacity);
+
+        for (List<MapEntry> bucket : buckets) {
+            if (bucket != null) {
+                for (MapEntry me : bucket) {
+                    entries.add(me);
+                }
+            }
+        }
+        init(numBuckets);
+        entries.forEach(e -> this.insert(e.key, e.value));
     }
 
     /**
@@ -113,8 +146,7 @@ public class HashMap<V> {
      * Returns the number of elements in the HashMap. Expected complexity: O(1)
      */
     public int size() {
-        // TODO: implement
-        return -1;
+        return numberOfElements;
     }
 
     /**
@@ -122,8 +154,7 @@ public class HashMap<V> {
      * complexity: O(1)
      */
     public int capacity() {
-        // TODO: implement
-        return -1;
+        return capacity;
     }
 
     /**
@@ -131,8 +162,15 @@ public class HashMap<V> {
      * complexity: O(H + 1), where O(H) is needed to hash the key.
      */
     public boolean contains(String key) {
-        // TODO: implement
-        return false;
+        int hash = generateHash(key);
+        if (buckets[hash] == null) {
+            return false;
+        } else {
+            if (buckets[hash].stream().anyMatch((el) -> (el.getKey().equals(key)))) {
+                return true;
+            }
+            return false;
+        }
     }
 
     /**
@@ -141,11 +179,24 @@ public class HashMap<V> {
      * 1), where O(H) is needed to hash the key.
      */
     public void insert(String key, V value) {
-        // TODO: implement
-        // ...
-        //after insertion check the load
-        if (this.buckets.size() / maxElementsAlowed >= LOAD_FACTOR) {
-            resize(maxElementsAlowed * 2);
+        int hash = generateHash(key);
+        if (buckets[hash] == null) {
+            buckets[hash] = new ArrayList<>();
+            buckets[hash].add(new MapEntry(hash, key, value));
+            numberOfElements++;
+        } else {
+            buckets[hash].forEach(el -> {
+                if (el.getKey().equals(key)) {
+                    el.setValue(value);
+                    return;
+                }
+            });
+            buckets[hash].add(new MapEntry(hash, key, value));
+            numberOfElements++;
+        }
+
+        if ((double) numberOfElements / (double) buckets.length >= LOAD_FACTOR) {
+            resize(binaryPower + 1);
         }
     }
 
@@ -155,11 +206,7 @@ public class HashMap<V> {
      */
     public void erase(String key) {
         // TODO: implement
-        // ...
-        //after deletion check the load
-//        if (this.buckets.size() / maxElementsAlowed <= 1 - LOAD_FACTOR) {
-//            resize(maxElementsAlowed / 2);
-//        }
+
     }
 
     /**
@@ -170,5 +217,18 @@ public class HashMap<V> {
     public V get(String key) {
         // TODO: implement
         return null;
+    }
+
+    public void treverse() {
+        for (List<MapEntry> bucket : buckets) {
+            if (bucket != null) {
+                for (MapEntry element : bucket) {
+                    if (element != null) {
+                        System.out.print("[" + element.getKey() + ": " + element.getHash() + "] ");
+                    }
+                }
+                System.out.println();
+            }
+        }
     }
 }
