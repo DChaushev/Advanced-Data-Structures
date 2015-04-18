@@ -30,4 +30,7 @@ http://en.wikipedia.org/wiki/Splay_tree
 Skew Heap - Heap-ordered binary tree or self-adjusting version of leftist heap.<br/>
 http://en.wikipedia.org/wiki/Skew_heap
 </li>
+<li>
+HashMap - I think it's needless to say what this is.
+</li>
 </ul>
