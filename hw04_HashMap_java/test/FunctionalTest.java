@@ -150,11 +150,8 @@ public class FunctionalTest {
 
     @Test//(expected = NoSuchElementException.class)
     public void testSpeed() throws IOException {
-        List<String> lines = new ArrayList<>();
+        List<String> lines = getLines();
 
-        Files.lines(Paths.get("./test/words.txt")).forEach(line -> {
-            lines.add(line);
-        });
         System.out.println(lines.size() + " words");
 
         HashMap<Integer> myMap = new HashMap<>();
@@ -190,5 +187,48 @@ public class FunctionalTest {
         endTime = System.currentTimeMillis();
 
         System.out.println("javaMap time: " + (endTime - startTime));
+        System.out.println("---------------------------");
     }
+
+    @Test
+    public void stressTest() throws IOException {
+        for (int i = 40; i > 0; i--) {
+            runSpeedTest(i);
+        }
+        System.out.println("---------------------------");
+    }
+
+    private List<String> getLines() throws IOException {
+        List<String> lines = new ArrayList<>();
+
+        Files.lines(Paths.get("./test/words.txt")).forEach(line -> {
+            lines.add(line);
+        });
+
+        return lines;
+    }
+
+    private void runSpeedTest(int n) throws IOException {
+        HashMap<Integer> myMap = new HashMap<>();
+        List<String> lines = getLines();
+        int element = 0;
+
+        long startTime = System.currentTimeMillis();
+
+        for (int i = 0; i < lines.size() / n; i++) {
+            myMap.insert(lines.get(i), Integer.SIZE);
+        }
+        element = myMap.size();
+        for (int i = 0; i < lines.size() / n; i++) {
+            myMap.get(lines.get(i));
+        }
+        for (int i = 0; i < lines.size() / n; i++) {
+            myMap.erase(lines.get(i));
+        }
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println(String.format("%d elements %d time", element, (endTime - startTime)));
+    }
+
 }
