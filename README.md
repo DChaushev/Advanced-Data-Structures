@@ -31,6 +31,7 @@ Skew Heap - Heap-ordered binary tree or self-adjusting version of leftist heap.<
 http://en.wikipedia.org/wiki/Skew_heap
 </li>
 <li>
-HashMap - I think it's needless to say what this is.
+HashMap - I think it's needless to say what this is.</br>
+http://en.wikipedia.org/wiki/Hash_table
 </li>
 </ul>
