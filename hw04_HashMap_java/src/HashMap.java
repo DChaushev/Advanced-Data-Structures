@@ -211,17 +211,31 @@ public class HashMap<K, V> {
      */
     public void resize(int numBuckets) {
 
-        List<MapEntry> entries = new ArrayList<>(numberOfElements);
+        boolean allowResize = false;
 
-        for (List<MapEntry> bucket : buckets) {
-            if (bucket != null) {
-                bucket.stream().forEach((me) -> {
-                    entries.add(me);
-                });
+        if (numBuckets >= MIN_BUCKETS) {
+            if (MAX_BUCKETS == USELESS) {
+                allowResize = true;
+            } else {
+                if (numBuckets <= MAX_BUCKETS) {
+                    allowResize = true;
+                }
             }
         }
-        init(numBuckets);
-        entries.forEach(e -> this.insert(e.key, e.value));
+
+        if (allowResize) {
+            List<MapEntry> entries = new ArrayList<>(numberOfElements);
+
+            for (List<MapEntry> bucket : buckets) {
+                if (bucket != null) {
+                    bucket.stream().forEach((me) -> {
+                        entries.add(me);
+                    });
+                }
+            }
+            init(numBuckets);
+            entries.forEach(e -> this.insert(e.key, e.value));
+        }
     }
 
     /**
