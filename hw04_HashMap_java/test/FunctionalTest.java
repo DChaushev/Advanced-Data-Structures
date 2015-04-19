@@ -140,6 +140,20 @@ public class FunctionalTest {
         for (String string : strings) {
             assertFalse(m.contains(string));
         }
+        
+        HashMap map = new HashMap(20);
+        
+        for (String string : strings) {
+            map.insert(string, Integer.MAX_VALUE);
+        }
+        
+        assertTrue(map.capacity() >= 20);
+        
+        map.clear();
+        
+        assertFalse(map.capacity() <= 20);
+        assertTrue(map.size() == 0);
+        
     }
     
     @Test

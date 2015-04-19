@@ -26,15 +26,15 @@ import java.util.NoSuchElementException;
  * (optional): Make it also work for arbitrary objects as keys.
  */
 public class HashMap<K, V> {
-
+    
     private final int BASE = 127;
     private final double LOAD_FACTOR = 0.75;
     private final int MIN_BINARY_POWER = 4;
     private final int USELESS = -1;
-
+    
     private final int MIN_BUCKETS;
     private final int MAX_BUCKETS;
-
+    
     private int MOD;
     private int capacity;
     private int numberOfElements;
@@ -210,22 +210,18 @@ public class HashMap<K, V> {
      * @param numBuckets
      */
     public void resize(int numBuckets) {
-
+        
         boolean allowResize = false;
-
+        
         if (numBuckets >= MIN_BUCKETS) {
-            if (MAX_BUCKETS == USELESS) {
+            if (MAX_BUCKETS == USELESS || (MAX_BUCKETS != USELESS && numBuckets <= MAX_BUCKETS)) {
                 allowResize = true;
-            } else {
-                if (numBuckets <= MAX_BUCKETS) {
-                    allowResize = true;
-                }
             }
         }
-
+        
         if (allowResize) {
             List<MapEntry> entries = new ArrayList<>(numberOfElements);
-
+            
             for (List<MapEntry> bucket : buckets) {
                 if (bucket != null) {
                     bucket.stream().forEach((me) -> {
@@ -252,7 +248,7 @@ public class HashMap<K, V> {
                 buckets[i] = null;
             }
         }
-        binaryPower = MIN_BINARY_POWER;
+        binaryPower = getPowerOfTwo(MIN_BUCKETS);
         init(MIN_BUCKETS);
     }
 
@@ -318,7 +314,7 @@ public class HashMap<K, V> {
             buckets[hash].add(new MapEntry(hash, key, value));
             numberOfElements++;
         }
-
+        
         if ((double) numberOfElements / (double) buckets.length >= LOAD_FACTOR) {
             if (MAX_BUCKETS == USELESS || (1 << (binaryPower + 1)) <= MAX_BUCKETS) {
                 resize(1 << ++binaryPower);
@@ -347,7 +343,7 @@ public class HashMap<K, V> {
                 buckets[hash] = null;
             }
         }
-
+        
         if ((1 << (binaryPower - 1)) >= MIN_BUCKETS && (double) numberOfElements / (double) buckets.length <= 1 - LOAD_FACTOR) {
             resize(1 << --binaryPower);
         }
@@ -385,35 +381,35 @@ public class HashMap<K, V> {
             }
         }
     }
-
+    
     private class MapEntry {
-
+        
         private final int hash;
         private final K key;
         private V value;
-
+        
         public MapEntry(int hash, K key, V value) {
             this.hash = hash;
             this.key = key;
             this.value = value;
         }
-
+        
         public K getKey() {
             return key;
         }
-
+        
         public V getValue() {
             return value;
         }
-
+        
         public void setValue(V value) {
             this.value = value;
         }
-
+        
         public int getHash() {
             return this.hash;
         }
-
+        
         @Override
         public boolean equals(Object obj) {
             MapEntry other = (MapEntry) obj;
