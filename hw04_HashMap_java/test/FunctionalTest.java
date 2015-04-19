@@ -4,15 +4,9 @@
  * and open the template in the editor.
  */
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -25,7 +19,7 @@ import org.junit.BeforeClass;
  */
 public class FunctionalTest {
 
-    private static HashMap<Integer> m;
+    private static HashMap<String, Integer> m;
     private static Method generateHash;
     private static Field MOD;
     private static Field capacity;
@@ -70,7 +64,7 @@ public class FunctionalTest {
     public static void prepareMethods() throws NoSuchMethodException, NoSuchFieldException {
         //METHODS:
         // get generateHash method
-        generateHash = HashMap.class.getDeclaredMethod("generateHash", String.class);
+        generateHash = HashMap.class.getDeclaredMethod("generateHash", Object.class);
         generateHash.setAccessible(true);
 
         //FIELDS:
@@ -148,87 +142,45 @@ public class FunctionalTest {
         }
     }
 
-    @Test//(expected = NoSuchElementException.class)
-    public void testSpeed() throws IOException {
-        List<String> lines = getLines();
+    @Test
+    public void testNewConstructorsMin() throws IllegalArgumentException, IllegalAccessException {
+        HashMap<String, Integer> map = new HashMap<>(10);
 
-        System.out.println(lines.size() + " words");
+        assertTrue(capacity.getInt(map) >= 10);
 
-        HashMap<Integer> myMap = new HashMap<>();
-        Map<String, Integer> javaMap = new java.util.HashMap<>();
-
-        long startTime = System.currentTimeMillis();
-
-        lines.stream().forEach((string) -> {
-            myMap.insert(string, Integer.SIZE);
-        });
-        lines.stream().forEach((string) -> {
-            myMap.get(string);
-        });
-        lines.stream().forEach((string) -> {
-            myMap.erase(string);
-        });
-
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("myMap time: " + (endTime - startTime));
-
-        startTime = System.currentTimeMillis();
-
-        lines.stream().forEach((string) -> {
-            javaMap.put(string, Integer.SIZE);
-        });
-        lines.stream().forEach((string) -> {
-            javaMap.get(string);
-        });
-        lines.stream().forEach((string) -> {
-            javaMap.remove(string);
-        });
-        endTime = System.currentTimeMillis();
-
-        System.out.println("javaMap time: " + (endTime - startTime));
-        System.out.println("---------------------------");
+        for (String string : strings) {
+            map.insert(string, Integer.SIZE);
+        }
+        for (String string : strings) {
+            map.erase(string);
+            assertTrue(capacity.getInt(map) >= 10);
+        }
     }
 
     @Test
-    public void stressTest() throws IOException {
-        for (int i = 40; i > 0; i--) {
-            runSpeedTest(i);
+    public void testNewConstructorsMax() throws IllegalArgumentException, IllegalAccessException {
+
+        int min = 4;
+        int max = 20;
+
+        HashMap<String, Integer> map = new HashMap<>(min, max);
+
+        assertTrue(map.capacity() >= min);
+        assertTrue(map.capacity() <= max);
+
+        for (String string : strings) {
+            map.insert(string, Integer.SIZE);
+            assertTrue(capacity.getInt(map) >= min);
+            assertTrue(map.capacity() <= max);
         }
-        System.out.println("---------------------------");
+        System.out.println(map.capacity());
+        System.out.println(map.size());
+        map.treverse();
+        for (String string : strings) {
+            map.erase(string);
+            assertTrue(capacity.getInt(map) >= min);
+            assertTrue(capacity.getInt(map) >= min);
+            assertTrue(map.capacity() <= max);
+        }
     }
-
-    private List<String> getLines() throws IOException {
-        List<String> lines = new ArrayList<>();
-
-        Files.lines(Paths.get("./test/words.txt")).forEach(line -> {
-            lines.add(line);
-        });
-
-        return lines;
-    }
-
-    private void runSpeedTest(int n) throws IOException {
-        HashMap<Integer> myMap = new HashMap<>();
-        List<String> lines = getLines();
-        int element = 0;
-
-        long startTime = System.currentTimeMillis();
-
-        for (int i = 0; i < lines.size() / n; i++) {
-            myMap.insert(lines.get(i), Integer.SIZE);
-        }
-        element = myMap.size();
-        for (int i = 0; i < lines.size() / n; i++) {
-            myMap.get(lines.get(i));
-        }
-        for (int i = 0; i < lines.size() / n; i++) {
-            myMap.erase(lines.get(i));
-        }
-
-        long endTime = System.currentTimeMillis();
-
-        System.out.println(String.format("%d elements %d time", element, (endTime - startTime)));
-    }
-
 }
