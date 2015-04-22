@@ -25,16 +25,16 @@ import java.util.NoSuchElementException;
  *
  * (optional): Make it also work for arbitrary objects as keys.
  */
-public class HashMap<K, V> {
-    
+public class HashMap<V> {
+
     private final int BASE = 127;
     private final double LOAD_FACTOR = 0.75;
     private final int MIN_BINARY_POWER = 4;
-    private final int USELESS = -1;
-    
+    private final int IRRELEVANT = -1;
+
     private final int MIN_BUCKETS;
     private final int MAX_BUCKETS;
-    
+
     private int MOD;
     private int capacity;
     private int numberOfElements;
@@ -47,8 +47,8 @@ public class HashMap<K, V> {
     public HashMap() {
         binaryPower = MIN_BINARY_POWER;
         MIN_BUCKETS = (1 << binaryPower);
-        MAX_BUCKETS = USELESS;
-        init(MIN_BUCKETS);
+        MAX_BUCKETS = IRRELEVANT;
+        init(1 << binaryPower);
     }
 
     /**
@@ -59,8 +59,8 @@ public class HashMap<K, V> {
     HashMap(int minBuckets) {
         binaryPower = getPowerOfTwo(minBuckets);
         MIN_BUCKETS = minBuckets;
-        MAX_BUCKETS = USELESS;
-        init(minBuckets);
+        MAX_BUCKETS = IRRELEVANT;
+        init(1 << binaryPower);
     }
 
     /**
@@ -72,7 +72,7 @@ public class HashMap<K, V> {
         binaryPower = getPowerOfTwo(minBuckets);
         MIN_BUCKETS = minBuckets;
         MAX_BUCKETS = maxBuckets;
-        init(minBuckets);
+        init(1 << binaryPower);
     }
 
     /**
@@ -100,18 +100,22 @@ public class HashMap<K, V> {
      * @param numBuckets
      */
     private void init(int numBuckets) {
-        int nextPrime = getNextPrime(numBuckets);
-        if (MAX_BUCKETS != USELESS) {
-            if (nextPrime <= MAX_BUCKETS) {
-                MOD = nextPrime;
-            } else {
-                MOD = MAX_BUCKETS;
-            }
-        } else {
-            MOD = nextPrime;
+//        int nextPrime = getNextPrime(numBuckets);
+//        if (MAX_BUCKETS != IRRELEVANT) {
+//            if (nextPrime <= MAX_BUCKETS) {
+//                MOD = nextPrime;
+//            } else {
+//                MOD = MAX_BUCKETS;
+//            }
+//        } else {
+//            MOD = nextPrime;
+//        }
+        if (numBuckets < MIN_BUCKETS) {
+            numBuckets = MIN_BUCKETS;
         }
+        MOD = numBuckets;
         capacity = MOD;
-        buckets = new List[MOD + 1];
+        buckets = new List[MOD];
         numberOfElements = 0;
     }
 
@@ -124,13 +128,23 @@ public class HashMap<K, V> {
      * @param str
      * @return
      */
-    private int generateHash(K str) {
-        int hash = str.hashCode();
-        if (hash >= 0) {
-            return hash % MOD;
-        } else {
-            return -hash % MOD;
-        }
+    private int generateHash(String str) {
+        int h = str.hashCode();
+        h ^= (h >>> 20) ^ (h >>> 12);
+        h = h ^ (h >>> 7) ^ (h >>> 4);
+        return Math.abs(h) % capacity;
+
+//        int hash = str.hashCode();
+//        if (hash >= 0) {
+//            return hash % MOD;
+//        } else {
+//            return -hash % MOD;
+//        }
+//        int hash = 1;
+//        for (int i = 0; i < (int) str.length(); i++) {
+//            hash = (int) (((long) hash * BASE + (int) str.charAt(i))) % MOD;
+//        }
+//        return hash % (buckets.length - 1);
     }
 
     /**
@@ -193,7 +207,7 @@ public class HashMap<K, V> {
      * @param key
      * @return
      */
-    private MapEntry getEntryFromBucket(List<MapEntry> bucket, K key) {
+    private MapEntry getEntryFromBucket(List<MapEntry> bucket, String key) {
         for (MapEntry element : bucket) {
             if (element.getKey().equals(key)) {
                 return element;
@@ -210,18 +224,18 @@ public class HashMap<K, V> {
      * @param numBuckets
      */
     public void resize(int numBuckets) {
-        
+
         boolean allowResize = false;
-        
+
         if (numBuckets >= MIN_BUCKETS) {
-            if (MAX_BUCKETS == USELESS || (MAX_BUCKETS != USELESS && numBuckets <= MAX_BUCKETS)) {
+            if (MAX_BUCKETS == IRRELEVANT || (MAX_BUCKETS != IRRELEVANT && numBuckets <= MAX_BUCKETS)) {
                 allowResize = true;
             }
         }
-        
+
         if (allowResize) {
             List<MapEntry> entries = new ArrayList<>(numberOfElements);
-            
+
             for (List<MapEntry> bucket : buckets) {
                 if (bucket != null) {
                     bucket.stream().forEach((me) -> {
@@ -278,7 +292,7 @@ public class HashMap<K, V> {
      * @param key
      * @return
      */
-    public boolean contains(K key) {
+    public boolean contains(String key) {
         int hash = generateHash(key);
         if (buckets[hash] == null) {
             return false;
@@ -298,7 +312,7 @@ public class HashMap<K, V> {
      * @param key
      * @param value
      */
-    public void insert(K key, V value) {
+    public void insert(String key, V value) {
         int hash = generateHash(key);
         if (buckets[hash] == null) {
             buckets[hash] = new LinkedList<>();
@@ -314,9 +328,9 @@ public class HashMap<K, V> {
             buckets[hash].add(new MapEntry(hash, key, value));
             numberOfElements++;
         }
-        
+
         if ((double) numberOfElements / (double) buckets.length >= LOAD_FACTOR) {
-            if (MAX_BUCKETS == USELESS || (1 << (binaryPower + 1)) <= MAX_BUCKETS) {
+            if (MAX_BUCKETS == IRRELEVANT || (1 << (binaryPower + 1)) <= MAX_BUCKETS) {
                 resize(1 << ++binaryPower);
             }
         }
@@ -331,7 +345,7 @@ public class HashMap<K, V> {
      *
      * @param key
      */
-    public void erase(K key) {
+    public void erase(String key) {
         int hash = generateHash(key);
         MapEntry toBeDeleted;
         if (buckets[hash] != null) {
@@ -343,7 +357,7 @@ public class HashMap<K, V> {
                 buckets[hash] = null;
             }
         }
-        
+
         if ((1 << (binaryPower - 1)) >= MIN_BUCKETS && (double) numberOfElements / (double) buckets.length <= 1 - LOAD_FACTOR) {
             resize(1 << --binaryPower);
         }
@@ -357,7 +371,7 @@ public class HashMap<K, V> {
      * @param key
      * @return
      */
-    public V get(K key) {
+    public V get(String key) {
         int hash = generateHash(key);
         MapEntry me;
         if (buckets[hash] != null) {
@@ -381,35 +395,35 @@ public class HashMap<K, V> {
             }
         }
     }
-    
+
     private class MapEntry {
-        
+
         private final int hash;
-        private final K key;
+        private final String key;
         private V value;
-        
-        public MapEntry(int hash, K key, V value) {
+
+        public MapEntry(int hash, String key, V value) {
             this.hash = hash;
             this.key = key;
             this.value = value;
         }
-        
-        public K getKey() {
+
+        public String getKey() {
             return key;
         }
-        
+
         public V getValue() {
             return value;
         }
-        
+
         public void setValue(V value) {
             this.value = value;
         }
-        
+
         public int getHash() {
             return this.hash;
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             MapEntry other = (MapEntry) obj;

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -29,7 +28,7 @@ public class StressTests {
 
         System.out.println(lines.size() + " words");
 
-        HashMap<String, Integer> myMap = new HashMap<>();
+        HashMap<Integer> myMap = new HashMap<>();
         Map<String, Integer> javaMap = new java.util.HashMap<>();
 
         long startTime = System.currentTimeMillis();
@@ -84,7 +83,7 @@ public class StressTests {
     }
 
     private void runSpeedTest(int n) throws IOException {
-        HashMap<String, Integer> myMap = new HashMap<>();
+        HashMap<Integer> myMap = new HashMap<>();
         List<String> lines = getLines();
         int element = 0;
 
@@ -121,7 +120,7 @@ public class StressTests {
     private void test(int numberOfElements) {
         int size = 0;
         Random rand = new Random();
-        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<Integer> map = new HashMap<>();
         java.util.Map<String, Integer> buildMap = new java.util.HashMap<>();
 
         String[] elements = new String[numberOfElements];
@@ -169,28 +168,28 @@ public class StressTests {
         return result.toString();
     }
 
-    @Test
-    public void testIntAsKey() {
-        HashMap<Integer, Integer> map = new HashMap<>();
-
-        int N = 1_000_000;
-        int size = 0;
-
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < N; i++) {
-            map.insert(i, i);
-        }
-        size = map.size();
-        for (int i = 0; i < N; i++) {
-            assertTrue(map.contains(i));
-        }
-        for (int i = 0; i < N; i++) {
-            map.erase(i);
-        }
-        for (int i = 0; i < N; i++) {
-            assertFalse(map.contains(i));
-        }
-        long end = System.currentTimeMillis();
-        System.out.println("Elements: " + size + ", time: " + (end - start));
-    }
+//    @Test
+//    public void testIntAsKey() {
+//        HashMap<Integer, Integer> map = new HashMap<>();
+//
+//        int N = 1_000_000;
+//        int size = 0;
+//
+//        long start = System.currentTimeMillis();
+//        for (int i = 0; i < N; i++) {
+//            map.insert(i, i);
+//        }
+//        size = map.size();
+//        for (int i = 0; i < N; i++) {
+//            assertTrue(map.contains(i));
+//        }
+//        for (int i = 0; i < N; i++) {
+//            map.erase(i);
+//        }
+//        for (int i = 0; i < N; i++) {
+//            assertFalse(map.contains(i));
+//        }
+//        long end = System.currentTimeMillis();
+//        System.out.println("Elements: " + size + ", time: " + (end - start));
+//    }
 }
