@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -142,6 +143,8 @@ public class StressTests {
         }
         long end = System.currentTimeMillis();
         System.out.println("My HashMap:  " + size + " elements, " + (end - start) + " ms");
+        Assert.assertEquals(map.size(), 0);
+        Assert.assertEquals(map.capacity(), 4);
 
         start = System.currentTimeMillis();
         for (String str : elements) {

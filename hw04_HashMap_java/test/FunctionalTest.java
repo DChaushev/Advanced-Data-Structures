@@ -18,7 +18,7 @@ import org.junit.BeforeClass;
  * @author Dimitar
  */
 public class FunctionalTest {
-    
+
     private static HashMap<Integer> m;
     private static Method generateHash;
     private static Field MOD;
@@ -56,10 +56,10 @@ public class FunctionalTest {
         "1sa3e ad2",
         "fg d 6aref 12"
     };
-    
+
     public FunctionalTest() {
     }
-    
+
     @BeforeClass
     public static void prepareMethods() throws NoSuchMethodException, NoSuchFieldException {
         //METHODS:
@@ -75,16 +75,16 @@ public class FunctionalTest {
         capacity = HashMap.class.getDeclaredField("capacity");
         capacity.setAccessible(true);
     }
-    
+
     @Before
     public void fillMap() {
         m = new HashMap<>();
-        
+
         for (String string : strings) {
             m.insert(string, Integer.SIZE);
         }
     }
-    
+
     @Test
     public void testHashGeneration() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         HashMap m = new HashMap();
@@ -94,18 +94,18 @@ public class FunctionalTest {
             assertTrue(hash <= capacity.getInt(m));
         }
     }
-    
+
     @Test
     public void testInsertion() {
-        
+
         for (String string : strings) {
             assertTrue(m.contains(string));
         }
     }
-    
+
     @Test
     public void testDeletion() {
-        
+
         assertEquals(m.size(), strings.length - 1);
         for (String string : strings) {
             m.erase(string);
@@ -113,18 +113,18 @@ public class FunctionalTest {
         }
         assertEquals(m.size(), 0);
     }
-    
+
     @Test
     public void testGet() {
-        
+
         for (String string : strings) {
             assertEquals(m.get(string), (Object) Integer.SIZE);
         }
     }
-    
+
     @Test(expected = NoSuchElementException.class)
     public void testDeleteAndGet() {
-        
+
         for (String string : strings) {
             m.erase(string);
         }
@@ -132,7 +132,7 @@ public class FunctionalTest {
             m.get(string);
         }
     }
-    
+
     @Test
     public void testClear() {
         m.clear();
@@ -140,28 +140,28 @@ public class FunctionalTest {
         for (String string : strings) {
             assertFalse(m.contains(string));
         }
-        
+
         HashMap map = new HashMap(20);
-        
+
         for (String string : strings) {
             map.insert(string, Integer.MAX_VALUE);
         }
-        
+
         assertTrue(map.capacity() >= 20);
-        
+
         map.clear();
-        
-//        assertFalse(map.capacity() <= 20);
+
+        assertFalse(map.capacity() < 20);
         assertTrue(map.size() == 0);
-        
+
     }
-    
+
     @Test
     public void testNewConstructorsMin() throws IllegalArgumentException, IllegalAccessException {
         HashMap<Integer> map = new HashMap<>(10);
-        
+
         assertTrue(capacity.getInt(map) >= 10);
-        
+
         for (String string : strings) {
             map.insert(string, Integer.SIZE);
         }
@@ -170,18 +170,18 @@ public class FunctionalTest {
             assertTrue(capacity.getInt(map) >= 10);
         }
     }
-    
+
     @Test
     public void testNewConstructorsMax() throws IllegalArgumentException, IllegalAccessException {
-        
+
         int min = 4;
         int max = 20;
-        
+
         HashMap<Integer> map = new HashMap<>(min, max);
-        
+
         assertTrue(map.capacity() >= min);
         assertTrue(map.capacity() <= max);
-        
+
         for (String string : strings) {
             map.insert(string, Integer.SIZE);
             assertTrue(capacity.getInt(map) >= min);
@@ -197,22 +197,5 @@ public class FunctionalTest {
             assertTrue(map.capacity() <= max);
         }
     }
-    
-    @Test
-    public void testResize() {
-        
-        HashMap<Integer> map = new HashMap<>();
-        map.resize(200);
-        assertTrue(map.capacity() >= 200);
-        
-        map = new HashMap<>(50);
-        map.resize(20);
-        assertTrue(map.capacity() >= 50);
-        
-        map = new HashMap<>(10, 30);
-        map.resize(40);
-        assertTrue(map.capacity() >= 10);
-        assertTrue(map.capacity() <= 31);
-        
-    }
+
 }

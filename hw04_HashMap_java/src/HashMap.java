@@ -1,6 +1,6 @@
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
  * Simple HashMap implementation in Java
  *
  * @author: Dimitar
- * @param <K>
  * @param <V>
  * @keywords: Data Structures, Map, Hashing
  * @modified:
@@ -29,8 +28,8 @@ public class HashMap<V> {
 
     private final int BASE = 127;
     private final double LOAD_FACTOR = 0.75;
-    private final int MIN_BINARY_POWER = 4;
-    private final int IRRELEVANT = -1;
+    private final int MIN_BINARY_POWER;
+    private final int NEEDLESS = -1;
 
     private final int MIN_BUCKETS;
     private final int MAX_BUCKETS;
@@ -38,17 +37,18 @@ public class HashMap<V> {
     private int MOD;
     private int capacity;
     private int numberOfElements;
-    private List<MapEntry>[] buckets;
+    private List<MapEntry> buckets;
     private int binaryPower;
 
     /**
      * Constructs an empty HashMap. Expected complexity: O(1)
      */
     public HashMap() {
-        binaryPower = MIN_BINARY_POWER;
-        MIN_BUCKETS = (1 << binaryPower);
-        MAX_BUCKETS = IRRELEVANT;
-        init(1 << binaryPower);
+        binaryPower = MIN_BINARY_POWER = 2;
+        MIN_BUCKETS = 1 << binaryPower;
+        init(MIN_BUCKETS);
+
+        MAX_BUCKETS = NEEDLESS;
     }
 
     /**
@@ -57,10 +57,11 @@ public class HashMap<V> {
      * Expected complexity: O(minBuckets)
      */
     HashMap(int minBuckets) {
-        binaryPower = getPowerOfTwo(minBuckets);
+        binaryPower = MIN_BINARY_POWER = getPowerOfTwo(minBuckets);
         MIN_BUCKETS = minBuckets;
-        MAX_BUCKETS = IRRELEVANT;
-        init(1 << binaryPower);
+        init(minBuckets);
+
+        MAX_BUCKETS = NEEDLESS;
     }
 
     /**
@@ -69,10 +70,11 @@ public class HashMap<V> {
      * should be maintained at all times! Expected complexity: O(minBuckets)
      */
     HashMap(int minBuckets, int maxBuckets) {
-        binaryPower = getPowerOfTwo(minBuckets);
+        binaryPower = MIN_BINARY_POWER = getPowerOfTwo(minBuckets);
         MIN_BUCKETS = minBuckets;
-        MAX_BUCKETS = maxBuckets;
         init(1 << binaryPower);
+
+        MAX_BUCKETS = maxBuckets;
     }
 
     /**
@@ -100,22 +102,9 @@ public class HashMap<V> {
      * @param numBuckets
      */
     private void init(int numBuckets) {
-//        int nextPrime = getNextPrime(numBuckets);
-//        if (MAX_BUCKETS != IRRELEVANT) {
-//            if (nextPrime <= MAX_BUCKETS) {
-//                MOD = nextPrime;
-//            } else {
-//                MOD = MAX_BUCKETS;
-//            }
-//        } else {
-//            MOD = nextPrime;
-//        }
-        if (numBuckets < MIN_BUCKETS) {
-            numBuckets = MIN_BUCKETS;
-        }
-        MOD = numBuckets;
-        capacity = MOD;
-        buckets = new List[MOD];
+        capacity = numBuckets;
+        MOD = getNextPrime(capacity);
+        buckets = new ArrayList<>(Collections.nCopies(capacity, null));
         numberOfElements = 0;
     }
 
@@ -129,22 +118,16 @@ public class HashMap<V> {
      * @return
      */
     private int generateHash(String str) {
-        int h = str.hashCode();
-        h ^= (h >>> 20) ^ (h >>> 12);
-        h = h ^ (h >>> 7) ^ (h >>> 4);
-        return Math.abs(h) % capacity;
+//        int h = str.hashCode();
+//        h ^= (h >>> 20) ^ (h >>> 12);
+//        h = h ^ (h >>> 7) ^ (h >>> 4);
+//        return Math.abs(h) % capacity;
 
-//        int hash = str.hashCode();
-//        if (hash >= 0) {
-//            return hash % MOD;
-//        } else {
-//            return -hash % MOD;
-//        }
-//        int hash = 1;
-//        for (int i = 0; i < (int) str.length(); i++) {
-//            hash = (int) (((long) hash * BASE + (int) str.charAt(i))) % MOD;
-//        }
-//        return hash % (buckets.length - 1);
+        int hash = 1;
+        for (int i = 0; i < (int) str.length(); i++) {
+            hash = (int) (((long) hash * BASE + (int) str.charAt(i))) % MOD;
+        }
+        return hash % capacity;
     }
 
     /**
@@ -207,11 +190,12 @@ public class HashMap<V> {
      * @param key
      * @return
      */
-    private MapEntry getEntryFromBucket(List<MapEntry> bucket, String key) {
-        for (MapEntry element : bucket) {
-            if (element.getKey().equals(key)) {
-                return element;
+    private MapEntry getEntryFromBucket(MapEntry bucket, String key) {
+        while (bucket != null) {
+            if (bucket.getKey().equals(key)) {
+                return bucket;
             }
+            bucket = bucket.getNext();
         }
         return null;
     }
@@ -223,29 +207,20 @@ public class HashMap<V> {
      *
      * @param numBuckets
      */
-    public void resize(int numBuckets) {
-
-        boolean allowResize = false;
-
-        if (numBuckets >= MIN_BUCKETS) {
-            if (MAX_BUCKETS == IRRELEVANT || (MAX_BUCKETS != IRRELEVANT && numBuckets <= MAX_BUCKETS)) {
-                allowResize = true;
+    private void resize(int numBuckets) {
+        List<MapEntry> entries = new ArrayList<>(numberOfElements);
+        for (MapEntry bucket : buckets) {
+            while (bucket != null) {
+                entries.add(bucket);
+                bucket = bucket.getNext();
             }
         }
 
-        if (allowResize) {
-            List<MapEntry> entries = new ArrayList<>(numberOfElements);
-
-            for (List<MapEntry> bucket : buckets) {
-                if (bucket != null) {
-                    bucket.stream().forEach((me) -> {
-                        entries.add(me);
-                    });
-                }
-            }
-            init(numBuckets);
-            entries.forEach(e -> this.insert(e.key, e.value));
+        init(numBuckets);
+        for (MapEntry e : entries) {
+            this.insert(e.getKey(), e.getValue());
         }
+
     }
 
     /**
@@ -256,14 +231,12 @@ public class HashMap<V> {
      * Expected complexity: O(N + B)
      */
     public void clear() {
-        for (int i = 0; i < buckets.length; i++) {
-            if (buckets[i] != null) {
-                buckets[i].clear();
-                buckets[i] = null;
-            }
+        buckets.clear();
+        if (MIN_BUCKETS <= (1 << MIN_BINARY_POWER)) {
+            init(1 << MIN_BINARY_POWER);
+        } else {
+            init(MIN_BUCKETS);
         }
-        binaryPower = getPowerOfTwo(MIN_BUCKETS);
-        init(MIN_BUCKETS);
     }
 
     /**
@@ -294,10 +267,11 @@ public class HashMap<V> {
      */
     public boolean contains(String key) {
         int hash = generateHash(key);
-        if (buckets[hash] == null) {
+        if (buckets.get(hash) == null) {
             return false;
         } else {
-            return buckets[hash].stream().anyMatch((el) -> (el.getKey().equals(key)));
+            MapEntry bucket = getEntryFromBucket(buckets.get(hash), key);
+            return bucket != null;
         }
     }
 
@@ -314,23 +288,32 @@ public class HashMap<V> {
      */
     public void insert(String key, V value) {
         int hash = generateHash(key);
-        if (buckets[hash] == null) {
-            buckets[hash] = new LinkedList<>();
-            buckets[hash].add(new MapEntry(hash, key, value));
+        if (buckets.get(hash) == null) {
+            buckets.set(hash, new MapEntry(key, value));
             numberOfElements++;
         } else {
-            for (MapEntry el : buckets[hash]) {
-                if (el.getKey().equals(key)) {
-                    el.setValue(value);
-                    return;
-                }
+            MapEntry bucket = getEntryFromBucket(buckets.get(hash), key);
+            if (bucket != null) {
+                bucket.setValue(value);
+                return;
             }
-            buckets[hash].add(new MapEntry(hash, key, value));
+
+            MapEntry newBucket = new MapEntry(key, value);
+            newBucket.setNext(buckets.get(hash));
+            buckets.set(hash, newBucket);
             numberOfElements++;
         }
 
-        if ((double) numberOfElements / (double) buckets.length >= LOAD_FACTOR) {
-            if (MAX_BUCKETS == IRRELEVANT || (1 << (binaryPower + 1)) <= MAX_BUCKETS) {
+        if ((double) numberOfElements / (double) capacity >= LOAD_FACTOR) {
+            if (MAX_BUCKETS != NEEDLESS) {
+                if (capacity != MAX_BUCKETS) {
+                    if (MAX_BUCKETS >= (1 << (binaryPower + 1))) {
+                        resize(1 << ++binaryPower);
+                    } else {
+                        resize(MAX_BUCKETS);
+                    }
+                }
+            } else {
                 resize(1 << ++binaryPower);
             }
         }
@@ -347,19 +330,32 @@ public class HashMap<V> {
      */
     public void erase(String key) {
         int hash = generateHash(key);
-        MapEntry toBeDeleted;
-        if (buckets[hash] != null) {
-            if ((toBeDeleted = getEntryFromBucket(buckets[hash], key)) != null) {
-                buckets[hash].remove(toBeDeleted);
-                numberOfElements--;
-            }
-            if (buckets[hash].isEmpty()) {
-                buckets[hash] = null;
-            }
+        if (buckets.get(hash) == null) {
+            return;
         }
 
-        if ((1 << (binaryPower - 1)) >= MIN_BUCKETS && (double) numberOfElements / (double) buckets.length <= 1 - LOAD_FACTOR) {
-            resize(1 << --binaryPower);
+        MapEntry current = buckets.get(hash);
+        MapEntry previous = null;
+
+        while (current != null) {
+            if (current.getKey().equals(key)) {
+                if (previous != null) {
+                    previous.setNext(current.getNext());
+                } else {
+                    buckets.set(hash, current.getNext());
+                }
+                numberOfElements--;
+            }
+            previous = current;
+            current = current.getNext();
+        }
+
+        if (binaryPower - 1 >= MIN_BINARY_POWER && (double) numberOfElements / (double) capacity <= 1 - LOAD_FACTOR) {
+            if (MIN_BUCKETS >= (1 << binaryPower - 1)) {
+                resize(MIN_BUCKETS);
+            } else {
+                resize(1 << --binaryPower);
+            }
         }
     }
 
@@ -374,9 +370,9 @@ public class HashMap<V> {
     public V get(String key) {
         int hash = generateHash(key);
         MapEntry me;
-        if (buckets[hash] != null) {
-            if ((me = getEntryFromBucket(buckets[hash], key)) != null) {
-                return me.value;
+        if (buckets.get(hash) != null) {
+            if ((me = getEntryFromBucket(buckets.get(hash), key)) != null) {
+                return me.getValue();
             }
         }
         throw new NoSuchElementException("The key '" + key + "' is not present the hashmap");
@@ -386,26 +382,29 @@ public class HashMap<V> {
      * This method displays all the elements from the hashmap.
      */
     public void treverse() {
-        for (List<MapEntry> bucket : buckets) {
+        for (MapEntry bucket : buckets) {
             if (bucket != null) {
-                bucket.stream().filter((element) -> (element != null)).forEach((element) -> {
-                    System.out.print("[" + element.getKey() + ": " + element.getHash() + "] ");
-                });
+                while (bucket != null) {
+                    System.out.print("[" + bucket.getKey() + "] ");
+                    bucket = bucket.getNext();
+                }
                 System.out.println();
             }
         }
+        System.out.println();
+
     }
 
     private class MapEntry {
 
-        private final int hash;
         private final String key;
         private V value;
+        private MapEntry next;
 
-        public MapEntry(int hash, String key, V value) {
-            this.hash = hash;
+        public MapEntry(String key, V value) {
             this.key = key;
             this.value = value;
+            next = null;
         }
 
         public String getKey() {
@@ -420,14 +419,13 @@ public class HashMap<V> {
             this.value = value;
         }
 
-        public int getHash() {
-            return this.hash;
+        public MapEntry getNext() {
+            return next;
         }
 
-        @Override
-        public boolean equals(Object obj) {
-            MapEntry other = (MapEntry) obj;
-            return this.key.equals(other.key);
+        public void setNext(MapEntry next) {
+            this.next = next;
         }
+
     }
 }
