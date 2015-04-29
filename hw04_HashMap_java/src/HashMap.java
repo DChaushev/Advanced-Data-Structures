@@ -118,16 +118,10 @@ public class HashMap<V> {
      * @return
      */
     private int generateHash(String str) {
-//        int h = str.hashCode();
-//        h ^= (h >>> 20) ^ (h >>> 12);
-//        h = h ^ (h >>> 7) ^ (h >>> 4);
-//        return Math.abs(h) % capacity;
-
-        int hash = 1;
-        for (int i = 0; i < (int) str.length(); i++) {
-            hash = (int) (((long) hash * BASE + (int) str.charAt(i))) % MOD;
-        }
-        return hash % capacity;
+        int h = str.hashCode();
+        h ^= (h >>> 20) ^ (h >>> 12);
+        h = h ^ (h >>> 7) ^ (h >>> 4);
+        return Math.abs(h) % capacity;
     }
 
     /**
@@ -208,17 +202,15 @@ public class HashMap<V> {
      * @param numBuckets
      */
     private void resize(int numBuckets) {
-        List<MapEntry> entries = new ArrayList<>(numberOfElements);
-        for (MapEntry bucket : buckets) {
-            while (bucket != null) {
-                entries.add(bucket);
-                bucket = bucket.getNext();
-            }
-        }
+        List<MapEntry> oldBuckets = buckets;
 
         init(numBuckets);
-        for (MapEntry e : entries) {
-            this.insert(e.getKey(), e.getValue());
+
+        for (MapEntry bucket : oldBuckets) {
+            while (bucket != null) {
+                this.insert(bucket.key, bucket.value);
+                bucket = bucket.getNext();
+            }
         }
 
     }
@@ -379,22 +371,9 @@ public class HashMap<V> {
     }
 
     /**
-     * This method displays all the elements from the hashmap.
+     * This is the data structure I use to represent each of the buckets. It is
+     * also a linked list to deal with the collisions.
      */
-    public void treverse() {
-        for (MapEntry bucket : buckets) {
-            if (bucket != null) {
-                while (bucket != null) {
-                    System.out.print("[" + bucket.getKey() + "] ");
-                    bucket = bucket.getNext();
-                }
-                System.out.println();
-            }
-        }
-        System.out.println();
-
-    }
-
     private class MapEntry {
 
         private final String key;
@@ -427,5 +406,24 @@ public class HashMap<V> {
             this.next = next;
         }
 
+    }
+
+    /**
+     * This method displays all the elements from the hashmap.
+     */
+    public void treverse() {
+        int i = 0;
+        for (MapEntry bucket : buckets) {
+            if (bucket != null) {
+                System.out.print(i + ": ");
+                while (bucket != null) {
+                    System.out.print("[" + bucket.getKey() + "] ");
+                    bucket = bucket.getNext();
+                }
+                System.out.println();
+            }
+            i++;
+        }
+        System.out.println();
     }
 }
