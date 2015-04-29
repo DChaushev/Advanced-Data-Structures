@@ -34,5 +34,18 @@ http://en.wikipedia.org/wiki/Skew_heap
 HashMap - I think it's needless to say what this is.</br>
 http://en.wikipedia.org/wiki/Hash_table
 </li>
+<li>
+A persistent data structure is a data structure that always preserves the previous version of itself when it is modified. Such data structures are effectively immutable, as their operations do not (visibly) update the structure in-place, but instead always yield a new updated structure. These types of data structures are particularly common in logical and functional programming.<br/>
+http://en.wikipedia.org/wiki/Persistent_data_structure </br>
+In this repo you can find implementations for:
+<ul>
+<li>
+Persistent Stack
 </li>
+<li>
+Persistent Queue - implemented with two persistent stacks
+</li>
+</ul>
+</li>
+
 </ul>
