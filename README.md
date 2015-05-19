@@ -51,5 +51,7 @@ Persistent Queue - implemented with two persistent stacks
 </li>
 </ul>
 </li>
-
+<li>
+Prefix tree or Trie - http://en.wikipedia.org/wiki/Trie
+</li>
 </ul>
