@@ -150,7 +150,7 @@ public:
             splittingBit = getNthBit(word, commonBits);
 
             if (commonBits == getBits(word)) {
-                // the word already exists: replace it
+                // that's the word
                 return dictionary[current->index].second;
             }
 
@@ -163,21 +163,47 @@ public:
 
 };
 
+void test();
+
 /*
  * 
  */
 int main(int argc, char** argv) {
 
+    test();
+
+    
+
+
+
+    return 0;
+}
+
+void test() {
     RadixTrie * t = new RadixTrie();
-    t->insert("ab", 10);
-    t->insert("bad", 6);
-    t->insert("cd", 12);
+    t->insert("ab", 1);
+    t->insert("bad", 2);
+    t->insert("cd", 3);
+    t->insert("baba", 4);
+    t->insert("bace", 5);
+    t->insert("babab", 6);
 
     cout << t->find("ab") << endl;
     cout << t->find("bad") << endl;
     cout << t->find("cd") << endl;
     cout << t->find("abc") << endl;
-    
+    cout << t->find("baba") << endl;
+    cout << t->find("bace") << endl;
+    cout << t->find("babab") << endl;
+
+    assert(t->find("ab") == 1);
+    assert(t->find("bad") == 2);
+    assert(t->find("cd") == 3);
+    assert(t->find("abc") == -1);
+    assert(t->find("baba") == 4);
+    assert(t->find("bace") == 5);
+    assert(t->find("babab") == 6);
+
 
     bool bb = getNthBit('a', 0);
     cout << bb << endl << !bb << endl;
@@ -211,7 +237,4 @@ int main(int argc, char** argv) {
     assert(findCommonBits("ab", "123") == 1);
     assert(findCommonBits("ab", "abc") == 16);
     assert(findCommonBits("ab", "") == 0);
-
-    return 0;
 }
-
