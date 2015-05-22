@@ -1,5 +1,5 @@
 /* 
- * File:   radix_patricia.cpp
+ * File:   prefix_tree.cpp
  * Author: Dimitar
  *
  * Created on May 19, 2015, 1:43 PM
