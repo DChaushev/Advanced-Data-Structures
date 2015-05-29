@@ -3,6 +3,13 @@
  * Author: Dimitar
  *
  * Created on May 21, 2015, 1:10 PM
+ * 
+ * This is the hardest task I've ever done and the ugliest code I've written in a long time...
+ * Also I wasn't able to finish it...
+ * I lack the nerves and the time.
+ * 
+ * Also, You need to compile it with c++11.
+ * 
  */
 
 #include <iostream>
@@ -117,8 +124,6 @@ private:
 
 public:
 
-    static int nodesCounter;
-
     RadixTrie() {
         root = 0;
     }
@@ -127,9 +132,6 @@ public:
 
         if (root == 0) {
             root = new Node();
-
-            nodesCounter++;
-
             root->index = 0;
             root->bits = getBits(word);
             dictionary.push_back({word, data});
@@ -157,15 +159,9 @@ public:
 
             if (commonBits < current->bits && parent == 0) {
                 Node * newRoot = new Node();
-
-                nodesCounter++;
-
                 newRoot->bits = commonBits;
                 current->bits -= commonBits;
                 newRoot->children[splittingBit] = new Node();
-
-                nodesCounter++;
-
                 newRoot->children[splittingBit]->bits = getBits(word) - newRoot->bits;
                 newRoot->children[splittingBit]->index = dictionary.size();
                 newRoot->children[!splittingBit] = current;
@@ -178,9 +174,6 @@ public:
         }
 
         parent->children[splittingBit] = new Node();
-
-        nodesCounter++;
-
         parent->children[splittingBit]->bits = getBits(word) - commonBits;
         parent->children[splittingBit]->index = dictionary.size();
 
@@ -192,9 +185,6 @@ public:
             parent->children[!splittingBit]->bits += (oldParentBits - parent->bits);
         else {
             parent->children[!splittingBit] = new Node();
-
-            nodesCounter++;
-
             parent->children[!splittingBit]->bits += (oldParentBits - parent->bits);
             parent->children[!splittingBit]->index = parent->index;
         }
@@ -261,30 +251,16 @@ public:
 
 };
 
-void test();
 void task(char *, char *);
-void testBitOperations();
-void testInsertAndFind();
-void testFromFile();
-
-int RadixTrie::nodesCounter = 0;
 
 /*
  * 
  */
 int main(int argc, char** argv) {
 
-    test();
     task(argv[1], argv[2]);
 
     return 0;
-}
-
-void test() {
-    testBitOperations();
-    testInsertAndFind();
-
-    cout << "All tests passed!" << endl;
 }
 
 struct Output {
@@ -292,14 +268,13 @@ struct Output {
     int data;
 };
 
-bool operator>(const Output &o1, const Output &o2) {
+bool operator<(const Output &o1, const Output &o2) {
     return o1.data > o2.data;
 }
 
 void task(char * dict, char * text) {
 
     RadixTrie * trie = new RadixTrie();
-    vector<char *> words;
 
     ifstream input(dict);
     while (!input.eof()) {
@@ -308,7 +283,6 @@ void task(char * dict, char * text) {
         input >> line;
         input >> data;
         char * word = new char [line.length() + 1];
-        words.push_back(word);
         strcpy(word, line.c_str());
         trie->insert(word, data);
     }
@@ -329,127 +303,10 @@ void task(char * dict, char * text) {
         }
 
         output.push_back({word, result});
-        //        cout << word << " " << result << endl;
     }
 
-    sort(output.begin(), output.end(), greater<Output>());
+    sort(output.begin(), output.end());
 
     for (int i = 0; i < output.size(); i++)
         cout << output[i].word << " " << output[i].data << endl;
-}
-
-void testInsertAndFind() {
-    RadixTrie * t = new RadixTrie();
-    t->insert("ab", 1);
-    t->insert("bad", 2);
-    t->insert("cd", 3);
-    t->insert("baba", 4);
-    t->insert("bace", 5);
-    t->insert("babab", 6);
-
-    //    cout << t->find("ab") << endl;
-    //    cout << t->find("bad") << endl;
-    //    cout << t->find("cd") << endl;
-    //    cout << t->find("abc") << endl;
-    //    cout << t->find("baba") << endl;
-    //    cout << t->find("bace") << endl;
-    //    cout << t->find("babab") << endl;
-
-    assert(t->find("ab") == 1);
-    assert(t->find("bad") == 2);
-    assert(t->find("cd") == 3);
-    assert(t->find("abc") == -1);
-    assert(t->find("baba") == 4);
-    assert(t->find("bace") == 5);
-    assert(t->find("babab") == 6);
-
-    t->insert("cd", 33);
-    //    cout << t->find("cd") << endl;
-    assert(t->find("cd") == 33);
-
-    vector<int> withPrefixBA = t->getAllWithPrefix("ba");
-    for (int i = 0; i < withPrefixBA.size(); i++) {
-        cout << withPrefixBA[i] << endl;
-    }
-}
-
-void testBitOperations() {
-    bool bb = getNthBit('a', 0);
-    assert(bb == 0);
-    assert(!bb == 1);
-
-    char a = 'a';
-    char b = 'b';
-
-    bitset<8> bitsetA = bitset<8>(a);
-    bitset<8> bitsetB = bitset<8>(b);
-
-    for (int i = 0; i < 16; i++)
-        if (i < 8)
-            assert(getNthBit("ab", i) == bitsetA[8 - i % 8 - 1]);
-        else
-            assert(getNthBit("ab", i) == bitsetB[8 - i % 8 - 1]);
-
-    assert(findCommonBits('a', 'b') == 6);
-    assert(findCommonBits('a', 'D') == 2);
-
-    assert(findCommonBits("ab", "ab") == 16);
-    assert(findCommonBits("baba", "ba") == 16);
-    assert(findCommonBits("baba", "bace") == 23);
-    assert(findCommonBits("ab", "123") == 1);
-    assert(findCommonBits("ab", "abc") == 16);
-    assert(findCommonBits("ab", "") == 0);
-}
-
-void testFromFile() {
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    std::chrono::duration<double> elapsed_seconds;
-
-    double time = 0;
-    RadixTrie * trie = new RadixTrie();
-
-    int n = 1689295;
-    int i = 0;
-    ifstream input("words2.txt");
-    cout << "inserting..." << endl;
-    while (!input.eof()) {
-        string line;
-        input >> line;
-        char * word = new char [line.length() + 1];
-        if (i == 1689298)
-            cout << "-----" << word << endl;
-        strcpy(word, line.c_str());
-        start = std::chrono::system_clock::now();
-        trie->insert(word, i++);
-        end = std::chrono::system_clock::now();
-        elapsed_seconds = end - start;
-        time += elapsed_seconds.count();
-        //                if (i == n) break;
-    }
-    cout << "Nodes: " << RadixTrie::nodesCounter << endl;
-    cout << "Inserting: " << time << " secs" << endl;
-
-    i = 0;
-    ifstream input2("words2.txt");
-    cout << "testing..." << endl;
-    while (!input2.eof()) {
-        string line;
-        input2 >> line;
-        char * word = new char [line.length() + 1];
-        strcpy(word, line.c_str());
-        start = std::chrono::system_clock::now();
-        int ans = trie->find(word);
-        end = std::chrono::system_clock::now();
-        elapsed_seconds = end - start;
-        time += elapsed_seconds.count();
-        if (ans != i) {
-            cout << word << " : " << i << " != " << trie->find(word) << endl;
-            break;
-        }
-        i++;
-        //        assert(trie->find(word) == i++);
-        //                if (i == n) break;
-    }
-
-    cout << "total: " << time << " sec" << endl;
 }
