@@ -51,6 +51,12 @@ public class SuffixArray {
      *
      * Having a sorted array we can use binary search!
      *
+     * The current time complexity of building the array is O(n^2), where n is
+     * the size of the text.
+     *
+     * If I have time I'll try to implement the DC3 algorithm that builds it for
+     * O(n).
+     *
      * @param text
      */
     public SuffixArray(String text) {
@@ -69,6 +75,10 @@ public class SuffixArray {
      *
      * Else it returns the position /from the sorted array/ of the first match.
      * After that we check it's neighbors for more string with that suffix.
+     *
+     * The time complexity for search is O(m*log(n) + X*m) -> O(m*log(n)), where
+     * n is the size of the array/text, m is the size of the pattern and X is a
+     * constant - the number of suffixes that match that pattern.
      *
      * @param pattern
      * @return List from all the indices from the original array.
