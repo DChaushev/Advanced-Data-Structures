@@ -76,9 +76,9 @@ public class SuffixArray {
      * Else it returns the position /from the sorted array/ of the first match.
      * After that we check it's neighbors for more string with that suffix.
      *
-     * The time complexity for search is O(m*log(n) + X*m) -> O(m*log(n)), where
-     * n is the size of the array/text, m is the size of the pattern and X is a
-     * constant - the number of suffixes that match that pattern.
+     * The time complexity for search is O(m*log(n) + X*m) -> O(X*m), where
+     * n is the size of the array/text, m is the size of the pattern and X is
+     * the number of suffixes that match that pattern.
      *
      * @param pattern
      * @return List from all the indices from the original array.
