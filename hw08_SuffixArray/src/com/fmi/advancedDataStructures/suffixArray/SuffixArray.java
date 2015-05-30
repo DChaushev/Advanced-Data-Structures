@@ -51,7 +51,7 @@ public class SuffixArray {
      *
      * Having a sorted array we can use binary search!
      *
-     * The current time complexity of building the array is O(n^2), where n is
+     * The current time complexity of building the array is O((n^2)*log(n)), where n is
      * the size of the text.
      *
      * If I have time I'll try to implement the DC3 algorithm that builds it for
@@ -70,62 +70,35 @@ public class SuffixArray {
     }
 
     /**
-     * We're binary searching for a given suffix in the array with the sorted
-     * indices. If there's no such element - it returns -1.
+     * We're binary searching for the lower and upper bound where the pattern matches.
      *
-     * Else it returns the position /from the sorted array/ of the first match.
-     * After that we check it's neighbors for more string with that suffix.
-     *
-     * The time complexity for search is O(m*log(n) + X*m) -> O(m*log(n)), where
-     * n is the size of the array/text, m is the size of the pattern and X is a
-     * constant - the number of suffixes that match that pattern.
+     * If there are such suffixes, we iterate through the interval and add their
+     * indexes to the result list.
+     * 
+     * The time complexity is worst case O(n) - that is when the text contains only
+     * equal characters (for instance "aaaaaaaa") and we search for that character.
+     * In that situation the lowerBound will be 0 and the upper - the length of the text.
+     * 
+     * Summary:
+     * We have two binary searches + one iteration through the range:
+     * O(2*log(n)) + O(upperBound - lowerBound);
+     * 
      *
      * @param pattern
      * @return List from all the indices from the original array.
      */
     List<Integer> search(String pattern) {
         List<Integer> result = new LinkedList<>();
-        int index = binarySearchForIndex(pattern);
-        if (index != -1) {
-            result.add(indicesArray[index]);
-            int i = index - 1;
-            while (i >= 0 && suffixesArray[indicesArray[i]].startsWith(pattern)) {
+        int startIndex = lowerBound(pattern);
+        int endIndex = upperBound(pattern);
+        
+        if (startIndex != -1 && endIndex != -1) {
+            for (int i = startIndex; i < endIndex; i++) {
                 result.add(indicesArray[i]);
-                i--;
-            }
-            i = index + 1;
-            while (i < indicesArray.length && suffixesArray[indicesArray[i]].startsWith(pattern)) {
-                result.add(indicesArray[i]);
-                i++;
             }
         }
+
         return result;
-    }
-
-    /**
-     * Needles to say what this does.
-     *
-     * @see #search(java.lang.String)
-     *
-     * @param pattern
-     * @return
-     */
-    private int binarySearchForIndex(String pattern) {
-        int start = 0;
-        int end = indicesArray.length;
-
-        while (end >= start) {
-            int mid = start + (end - start) / 2;
-            String suffix = suffixesArray[indicesArray[mid]];
-            if (suffix.startsWith(pattern)) {
-                return mid;
-            } else if (suffix.compareTo(pattern) < 0) {
-                start = mid + 1;
-            } else {
-                end = mid - 1;
-            }
-        }
-        return -1;
     }
 
     /**
@@ -139,5 +112,50 @@ public class SuffixArray {
             throw new IndexOutOfBoundsException();
         }
         return suffixesArray[index];
+    }
+
+    private int lowerBound(String pattern) {
+        int start = 0;
+        int end = indicesArray.length - 1;
+        int mid = start + (end - start) / 2;
+
+        while (true) {
+            String suffix = suffixesArray[indicesArray[mid]];
+            int cmp = suffix.compareTo(pattern);
+            if (cmp == 0 || cmp > 0 || suffix.startsWith(pattern)) {
+                end = mid - 1;
+                if (end < start) {
+                    return mid;
+                }
+            } else {
+                start = mid + 1;
+                if (end < start) {
+                    return mid < indicesArray.length - 1 ? mid + 1 : -1;
+                }
+            }
+            mid = start + (end - start) / 2;
+        }
+    }
+
+    private int upperBound(String pattern) {
+        int start = 0;
+        int end = indicesArray.length - 1;
+        int mid = (start + end) / 2;
+        while (true) {
+            String suffix = suffixesArray[indicesArray[mid]];
+            int cmp = suffix.compareTo(pattern);
+            if (cmp == 0 || cmp < 0 || suffix.startsWith(pattern)) {
+                start = mid + 1;
+                if (end < start) {
+                    return mid < indicesArray.length ? mid + 1 : -1;
+                }
+            } else {
+                end = mid - 1;
+                if (end < start) {
+                    return mid;
+                }
+            }
+            mid = (start + end) / 2;
+        }
     }
 }
