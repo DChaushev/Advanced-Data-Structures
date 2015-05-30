@@ -51,8 +51,8 @@ public class SuffixArray {
      *
      * Having a sorted array we can use binary search!
      *
-     * The current time complexity of building the array is O((n^2)*log(n)), where n is
-     * the size of the text.
+     * The current time complexity of building the array is O((n^2)*log(n)),
+     * where n is the size of the text.
      *
      * If I have time I'll try to implement the DC3 algorithm that builds it for
      * O(n).
@@ -70,19 +70,19 @@ public class SuffixArray {
     }
 
     /**
-     * We're binary searching for the lower and upper bound where the pattern matches.
+     * We're binary searching for the lower and upper bound where the pattern
+     * matches.
      *
      * If there are such suffixes, we iterate through the interval and add their
      * indexes to the result list.
-     * 
-     * The time complexity is worst case O(n) - that is when the text contains only
-     * equal characters (for instance "aaaaaaaa") and we search for that character.
-     * In that situation the lowerBound will be 0 and the upper - the length of the text.
-     * 
-     * Summary:
-     * We have two binary searches + one iteration through the range:
+     *
+     * The time complexity is worst case O(n) - that is when the text contains
+     * only equal characters (for instance "aaaaaaaa") and we search for that
+     * character. In that situation the lowerBound will be 0 and the upper - the
+     * length of the text.
+     *
+     * Summary: We have two binary searches + one iteration through the range:
      * O(2*log(n)) + O(upperBound - lowerBound);
-     * 
      *
      * @param pattern
      * @return List from all the indices from the original array.
@@ -91,7 +91,7 @@ public class SuffixArray {
         List<Integer> result = new LinkedList<>();
         int startIndex = lowerBound(pattern);
         int endIndex = upperBound(pattern);
-        
+
         if (startIndex != -1 && endIndex != -1) {
             for (int i = startIndex; i < endIndex; i++) {
                 result.add(indicesArray[i]);
