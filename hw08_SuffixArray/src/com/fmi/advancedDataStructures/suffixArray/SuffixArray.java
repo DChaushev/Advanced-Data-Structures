@@ -76,13 +76,14 @@ public class SuffixArray {
      * If there are such suffixes, we iterate through the interval and add their
      * indexes to the result list.
      *
-     * The time complexity is worst case O(n) - that is when the text contains
-     * only equal characters (for instance "aaaaaaaa") and we search for that
-     * character. In that situation the lowerBound will be 0 and the upper - the
-     * length of the text.
+     * The worst case scenario is when the text contains only equal characters
+     * (for instance "aaaaaaaa") and we search for that character. In that
+     * situation the lowerBound will be 0 and the upper - the length of the
+     * text.
      *
      * Summary: We have two binary searches + one iteration through the range:
-     * O(2*log(n)) + O(upperBound - lowerBound);
+     * O(m*log(n)) + O(upperBound - lowerBound), where m is the length of the
+     * pattern.
      *
      * @param pattern
      * @return List from all the indices from the original array.
@@ -113,6 +114,12 @@ public class SuffixArray {
         return suffixesArray[index];
     }
 
+    /**
+     * Binary searches for the first appearances of the pattern.
+     *
+     * @param pattern
+     * @return
+     */
     private int lowerBound(String pattern) {
         int start = 0;
         int end = indicesArray.length - 1;
@@ -136,6 +143,12 @@ public class SuffixArray {
         }
     }
 
+    /**
+     * Binary searches for the last appearances of the pattern.
+     *
+     * @param pattern
+     * @return
+     */
     private int upperBound(String pattern) {
         int start = 0;
         int end = indicesArray.length - 1;
