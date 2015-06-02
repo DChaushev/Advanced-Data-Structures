@@ -97,7 +97,6 @@ public class SuffixArray {
                 result.add(indicesArray[i]);
             }
         }
-
         return result;
     }
 
@@ -140,7 +139,8 @@ public class SuffixArray {
     private int upperBound(String pattern) {
         int start = 0;
         int end = indicesArray.length - 1;
-        int mid = (start + end) / 2;
+        int mid = start + (end - start) / 2;
+
         while (true) {
             String suffix = suffixesArray[indicesArray[mid]];
             int cmp = suffix.compareTo(pattern);
@@ -155,7 +155,7 @@ public class SuffixArray {
                     return mid;
                 }
             }
-            mid = (start + end) / 2;
+            mid = start + (end - start) / 2;
         }
     }
 }

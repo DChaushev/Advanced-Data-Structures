@@ -50,8 +50,10 @@ public class Main {
 
         SuffixArray sa = new SuffixArray(ABBRACADDABBRA);
         findSuffix(sa, "abbra");
+        findSuffix(sa, "a");
         findSuffix(sa, "bb");
         findSuffix(sa, "bbra");
+        findSuffix(sa, "ra");
         findSuffix(sa, "xyz");
         findSuffix(sa, "ghost");
 
