@@ -7,6 +7,7 @@ package com.fmi.advancedDataStructures.suffixArray;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -16,6 +17,8 @@ public class Main {
 
     public static void main(String[] args) {
         testSearch();
+        System.out.println("\n==================\nStress test:");
+        stressTest();
     }
 
     private static void findSuffix(SuffixArray sa, String suffix, String text) {
@@ -72,6 +75,41 @@ public class Main {
         findSuffix(sa, "aaaaaaa", AAA);
         findSuffix(sa, "b", AAA);
         findSuffix(sa, "ab", AAA);
+    }
+
+    static String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            + "abcdefghijklmnopqrstuvwxyz"
+            + "0123456789"
+            + " `~!@#$%^&*()-_=+{}[]|\\'\",.<>/?:;";
+
+    static String randomString(int len) {
+        Random rand = new Random();
+        StringBuilder str = new StringBuilder(1_000_000);
+        for (int c = 0; c < len; c++) {
+            str.append(alphabet.charAt(rand.nextInt(alphabet.length())));
+        }
+        return str.toString();
+    }
+
+    private static void stressTest() {
+        int size = 1_000_000;
+        String bigText = randomString(size);
+
+        System.out.print("build array with text with size " + size);
+
+        long startTime = System.currentTimeMillis();
+        SuffixArray sa = new SuffixArray(bigText);
+        long endTime = System.currentTimeMillis();
+
+        String suff = "a";
+        System.out.println(" for " + (endTime - startTime) + " ms.");
+        System.out.println("Searching for '" + suff + "':");
+
+        startTime = System.currentTimeMillis();
+        List res = sa.search(suff);
+        endTime = System.currentTimeMillis();
+
+        System.out.println(res.size() + " suffixes found for " + (endTime - startTime) + " ms.");
     }
 
 }

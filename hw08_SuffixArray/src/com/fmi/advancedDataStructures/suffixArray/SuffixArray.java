@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * ATTENTION: The code below is mighty ugly!!!
+ *
+ * But is reasonably fast.
  *
  * @author Dimitar
  */
@@ -67,12 +70,13 @@ public class SuffixArray {
      * @param text
      */
     public SuffixArray(String text) {
+
         this.text = text;
         indicesArray = new Integer[text.length()];
         for (int i = 0; i < indicesArray.length; i++) {
             indicesArray[i] = i;
         }
-        Arrays.sort(indicesArray, (x, y) -> text.substring(x).compareTo(text.substring(y)));
+        Arrays.sort(indicesArray, (x, y) -> compare(x, y));
     }
 
     /**
@@ -94,7 +98,7 @@ public class SuffixArray {
      * @param pattern
      * @return List from all the indices from the original array.
      */
-    List<Integer> search(String pattern) {
+    public List<Integer> search(String pattern) {
         List<Integer> result = new LinkedList<>();
         int startIndex = lowerBound(pattern);
         int endIndex = upperBound(pattern);
@@ -119,9 +123,8 @@ public class SuffixArray {
         int mid = start + (end - start) / 2;
 
         while (true) {
-            String suffix = text.substring(indicesArray[mid]);
-            int cmp = suffix.compareTo(pattern);
-            if (cmp == 0 || cmp > 0 || suffix.startsWith(pattern)) {
+            int cmp = compareToPattern(indicesArray[mid], pattern);
+            if (cmp == 0 || cmp > 0 || startsWith(indicesArray[mid], pattern)) {
                 end = mid - 1;
                 if (end < start) {
                     return mid;
@@ -148,9 +151,8 @@ public class SuffixArray {
         int mid = start + (end - start) / 2;
 
         while (true) {
-            String suffix = text.substring(indicesArray[mid]);
-            int cmp = suffix.compareTo(pattern);
-            if (cmp == 0 || cmp < 0 || suffix.startsWith(pattern)) {
+            int cmp = compareToPattern(indicesArray[mid], pattern);
+            if (cmp == 0 || cmp < 0 || startsWith(indicesArray[mid], pattern)) {
                 start = mid + 1;
                 if (end < start) {
                     return mid < indicesArray.length ? mid + 1 : -1;
@@ -163,5 +165,83 @@ public class SuffixArray {
             }
             mid = start + (end - start) / 2;
         }
+    }
+
+    /**
+     * Below I'm defining 3 functions.
+     *
+     * I'm doing all this just to avoid using substring, which from Java 7 is
+     * making a copy of the substring and is very slow.
+     *
+     * Just for comparison - while using substring the building of an array with
+     * 1000000 elements took more than a minute.
+     *
+     * Now it takes less than a sec!
+     *
+     *
+     * This first one compares two substring starting position x and y in the
+     * text.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    private int compare(int x, int y) {
+        int len1 = text.length() - x;
+        int len2 = text.length() - y;
+        int lim = Math.min(len1, len2);
+
+        int k = 0;
+        while (k < lim) {
+            char c1 = text.charAt(x++);
+            char c2 = text.charAt(y++);
+            if (c1 != c2) {
+                return c1 - c2;
+            }
+            k++;
+        }
+        return len1 - len2;
+    }
+
+    /**
+     * This compares a given substring from the text with a given pattern.
+     *
+     * @param index
+     * @param pattern
+     * @return
+     */
+    private int compareToPattern(int index, String pattern) {
+        int len1 = text.length() - index;
+        int len2 = pattern.length();
+        int lim = Math.min(len1, len2);
+
+        int k = 0;
+        while (k < lim) {
+            char c1 = text.charAt(index++);
+            char c2 = pattern.charAt(k++);
+            if (c1 != c2) {
+                return c1 - c2;
+            }
+        }
+        return len1 - len2;
+    }
+
+    /**
+     * Checks if a given substring from the text starts with a given pattern.
+     *
+     * @param index
+     * @param pattern
+     * @return
+     */
+    private boolean startsWith(int index, String pattern) {
+        if (text.length() - index < pattern.length()) {
+            return false;
+        }
+        for (int i = 0; i < pattern.length(); i++) {
+            if (pattern.charAt(i) != text.charAt(index + i)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
