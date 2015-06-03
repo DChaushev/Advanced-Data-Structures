@@ -18,7 +18,7 @@ public class Main {
         testSearch();
     }
 
-    private static void findSuffix(SuffixArray sa, String suffix) {
+    private static void findSuffix(SuffixArray sa, String suffix, String text) {
         System.out.println("=======================");
         System.out.print("Searching for '" + suffix + "': \nFound at indices:\n");
         List<Integer> result;
@@ -26,7 +26,7 @@ public class Main {
         Collections.sort(result);
         if (!result.isEmpty()) {
             for (Integer i : result) {
-                System.out.println(i + ": " + sa.getSuffix(i));
+                System.out.println(i + ": " + text.substring(i));
             }
         }
     }
@@ -49,29 +49,29 @@ public class Main {
                 + "sometimes by accident, sometimes on purpose (injected humour and the like).";
 
         SuffixArray sa = new SuffixArray(ABBRACADDABBRA);
-        findSuffix(sa, "abbra");
-        findSuffix(sa, "a");
-        findSuffix(sa, "bb");
-        findSuffix(sa, "bbra");
-        findSuffix(sa, "ra");
-        findSuffix(sa, "xyz");
-        findSuffix(sa, "ghost");
+        findSuffix(sa, "abbra", ABBRACADDABBRA);
+        findSuffix(sa, "a", ABBRACADDABBRA);
+        findSuffix(sa, "bb", ABBRACADDABBRA);
+        findSuffix(sa, "bbra", ABBRACADDABBRA);
+        findSuffix(sa, "ra", ABBRACADDABBRA);
+        findSuffix(sa, "xyz", ABBRACADDABBRA);
+        findSuffix(sa, "ghost", ABBRACADDABBRA);
 
         sa = new SuffixArray(LOREM_IPSUM.toLowerCase());
-        findSuffix(sa, "lorem");
-        findSuffix(sa, "ipsum");
-        findSuffix(sa, "version");
-        findSuffix(sa, "ghost");
-        findSuffix(sa, "is");
-        findSuffix(sa, "that");
-        findSuffix(sa, "the 1");
+        findSuffix(sa, "lorem", LOREM_IPSUM);
+        findSuffix(sa, "ipsum", LOREM_IPSUM);
+        findSuffix(sa, "version", LOREM_IPSUM);
+        findSuffix(sa, "ghost", LOREM_IPSUM);
+        findSuffix(sa, "is", LOREM_IPSUM);
+        findSuffix(sa, "that", LOREM_IPSUM);
+        findSuffix(sa, "the 1", LOREM_IPSUM);
 
         sa = new SuffixArray(AAA);
-        findSuffix(sa, "a");
-        findSuffix(sa, "aaa");
-        findSuffix(sa, "aaaaaaa");
-        findSuffix(sa, "b");
-        findSuffix(sa, "ab");
+        findSuffix(sa, "a", AAA);
+        findSuffix(sa, "aaa", AAA);
+        findSuffix(sa, "aaaaaaa", AAA);
+        findSuffix(sa, "b", AAA);
+        findSuffix(sa, "ab", AAA);
     }
 
 }

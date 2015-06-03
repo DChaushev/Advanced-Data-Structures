@@ -15,9 +15,16 @@ import java.util.List;
  */
 public class SuffixArray {
 
-    //This is the array in which we'll keeping all the suffixes /non sorted/
-    private final String[] suffixesArray;
-    //In this array we are keeping the indices, coresponding to the indices of the suffixes as if they were sorted
+    /*
+     I was keeping all the suffixes in an array, but decided that it was taking too
+     much memory. So now I'm keeping the whole text and when a need a suffix I call
+     String.substring()
+     */
+    private final String text;
+    /*
+     In this array we are keeping the indices, coresponding to the indices of
+     the suffixes as if they were sorted.
+     */
     private final Integer[] indicesArray;
 
     /**
@@ -60,13 +67,12 @@ public class SuffixArray {
      * @param text
      */
     public SuffixArray(String text) {
-        suffixesArray = new String[text.length()];
+        this.text = text;
         indicesArray = new Integer[text.length()];
-        for (int i = 0; i < suffixesArray.length; i++) {
-            suffixesArray[i] = text.substring(i, text.length());
+        for (int i = 0; i < indicesArray.length; i++) {
             indicesArray[i] = i;
         }
-        Arrays.sort(indicesArray, (x, y) -> suffixesArray[x].compareTo(suffixesArray[y]));
+        Arrays.sort(indicesArray, (x, y) -> text.substring(x).compareTo(text.substring(y)));
     }
 
     /**
@@ -102,19 +108,6 @@ public class SuffixArray {
     }
 
     /**
-     * I'm using this method from the Main to get the suffix at a given index.
-     *
-     * @param index
-     * @return
-     */
-    public String getSuffix(int index) {
-        if (index < 0 && index >= suffixesArray.length) {
-            throw new IndexOutOfBoundsException();
-        }
-        return suffixesArray[index];
-    }
-
-    /**
      * Binary searches for the first appearances of the pattern.
      *
      * @param pattern
@@ -126,7 +119,7 @@ public class SuffixArray {
         int mid = start + (end - start) / 2;
 
         while (true) {
-            String suffix = suffixesArray[indicesArray[mid]];
+            String suffix = text.substring(indicesArray[mid]);
             int cmp = suffix.compareTo(pattern);
             if (cmp == 0 || cmp > 0 || suffix.startsWith(pattern)) {
                 end = mid - 1;
@@ -155,7 +148,7 @@ public class SuffixArray {
         int mid = start + (end - start) / 2;
 
         while (true) {
-            String suffix = suffixesArray[indicesArray[mid]];
+            String suffix = text.substring(indicesArray[mid]);
             int cmp = suffix.compareTo(pattern);
             if (cmp == 0 || cmp < 0 || suffix.startsWith(pattern)) {
                 start = mid + 1;
