@@ -23,6 +23,10 @@ private:
 
     void calc_suffixes(int* suffixes);
 
+    bool map_contains(int key);
+
+    int get_bad_char(int key);
+
 public:
 
     BoyerMoore(char* pattern);

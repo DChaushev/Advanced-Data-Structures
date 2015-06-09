@@ -69,6 +69,17 @@ void BoyerMoore::calc_suffixes(int* suffixes) {
     }
 }
 
+bool BoyerMoore::map_contains(int key) {
+    std::unordered_map<int, int>::const_iterator got = bad_match_table.find(key);
+    return got != bad_match_table.end();
+}
+
+int BoyerMoore::get_bad_char(int key) {
+    if (map_contains(key))
+        return bad_match_table[key];
+    else return -1;
+}
+
 void BoyerMoore::test() {
     std::cout << "--- bad characters ---" << std::endl;
     for (std::unordered_map<int, int>::iterator it = bad_match_table.begin(); it != bad_match_table.end(); it++) {
