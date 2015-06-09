@@ -16,6 +16,11 @@ pattern(pattern) {
     border = new int[pattern_length + 1];
     shift = new int[pattern_length + 1];
 
+    for (int i = 0; i <= pattern_length; i++) {
+        shift[i] = 0;
+        border[i] = 0;
+    }
+
     preprocess_bad_character_rule();
     preprocess_good_suffixes_rule_case1();
     preprocess_good_suffixes_rule_case2();
@@ -32,10 +37,6 @@ void BoyerMoore::preprocess_bad_character_rule() {
 }
 
 void BoyerMoore::preprocess_good_suffixes_rule_case1() {
-
-    for (int i = 0; i <= pattern_length; i++) {
-        shift[i] = 0;
-    }
 
     int i = pattern_length;
     int j = pattern_length + 1;
