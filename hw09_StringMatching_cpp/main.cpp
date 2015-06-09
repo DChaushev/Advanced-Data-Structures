@@ -13,18 +13,19 @@ using namespace std;
 
 void boyer_moore_search(BoyerMoore * bm, const char* text, int text_length) {
 
-    int j = 0;
-    while (j <= text_length - bm->pattern_length) {
+    int i = 0;
+    int j;
 
-        int i = bm->pattern_length - 1;
-        while (i >= 0 && bm->pattern[i] == text[i + j]) --i;
-        if (i < 0) {
-            cout << j << endl;
-            j += bm->good_suffix_rule_table[0];
+    while (i <= text_length - bm->pattern_length) {
+        j = bm->pattern_length - 1;
+        while (j >= 0 && bm->pattern[j] == text[i + j]) j--;
+        if (j < 0) {
+            cout << i << endl;
+            i += bm->shift[0];
         } else {
-            int good = bm->good_suffix_rule_table[i];
-            int bad = bm->get_bad_char(text[i + j]) - bm->pattern_length + i + 1;
-            j += max(good, bad);
+            int good = bm->shift[j + 1];
+            int bad = j - bm->get_bad_char(text[i + j]);
+            i += max(good, bad);
         }
     }
 }
@@ -51,7 +52,6 @@ int main(int argc, char** argv) {
 
     BoyerMoore * bm3 = new BoyerMoore("Ipsum");
     boyer_moore_search(bm3, textLorem, strlen(textLorem));
-    bm3->test();
     delete bm3;
 
     return 0;

@@ -15,13 +15,14 @@ private:
     int pattern_length;
 
     std::unordered_map<int, int> bad_match_table;
-    int * good_suffix_rule_table;
+    int * border;
+    int * shift;
 
     void preprocess_bad_character_rule();
 
-    void preprocess_good_suffixes_rule();
-
-    void calc_suffixes(int* suffixes);
+    void preprocess_good_suffixes_rule_case1();
+    
+    void preprocess_good_suffixes_rule_case2();
 
     bool map_contains(int key);
 

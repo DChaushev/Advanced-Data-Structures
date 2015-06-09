@@ -12,61 +12,55 @@
 BoyerMoore::BoyerMoore(char* pattern) :
 pattern(pattern) {
     this->pattern_length = strlen(pattern);
+
+    border = new int[pattern_length + 1];
+    shift = new int[pattern_length + 1];
+
     preprocess_bad_character_rule();
-    preprocess_good_suffixes_rule();
+    preprocess_good_suffixes_rule_case1();
+    preprocess_good_suffixes_rule_case2();
 }
 
 BoyerMoore::~BoyerMoore() {
-    delete[] good_suffix_rule_table;
+    delete[] border;
+    delete[] shift;
 }
 
 void BoyerMoore::preprocess_bad_character_rule() {
-    for (int i = 0; i < pattern_length - 1; ++i)
-        bad_match_table[pattern[i]] = pattern_length - i - 1;
+    for (int i = 0; i < pattern_length; ++i)
+        bad_match_table[pattern[i]] = i;
 }
 
-void BoyerMoore::preprocess_good_suffixes_rule() {
-    good_suffix_rule_table = new int[pattern_length];
-    int* suffixes = new int[pattern_length];
+void BoyerMoore::preprocess_good_suffixes_rule_case1() {
 
-    calc_suffixes(suffixes);
+    for (int i = 0; i <= pattern_length; i++) {
+        shift[i] = 0;
+    }
 
-    for (int i = 0; i < pattern_length; i++)
-        good_suffix_rule_table[i] = pattern_length;
+    int i = pattern_length;
+    int j = pattern_length + 1;
+    border[i] = j;
 
-    for (int i = pattern_length - 1; i >= 0; i--) {
-        if (suffixes[i] == i + 1) {
-            for (int j = 0; j < pattern_length - i - 1; j++) {
-                if (good_suffix_rule_table[j] == pattern_length) {
-                    good_suffix_rule_table[j] = pattern_length - i - 1;
-                }
-            }
+    while (i > 0) {
+        while (j <= pattern_length && pattern[i - 1] != pattern[j - 1]) {
+            if (shift[j] == 0) shift[j] = j - i;
+            j = border[j];
         }
+        i--;
+        j--;
+        border[i] = j;
     }
-
-    for (int i = 0; i < pattern_length - 2; i++) {
-        good_suffix_rule_table[pattern_length - 1 - suffixes[i]] = pattern_length - i - 1;
-    }
-
-    delete[] suffixes;
 }
 
-void BoyerMoore::calc_suffixes(int* suffixes) {
-    suffixes[pattern_length - 1] = pattern_length;
-    int g = pattern_length - 1;
-    int f = 0;
+void BoyerMoore::preprocess_good_suffixes_rule_case2() {
+    int i;
+    int j = border[0];
 
-    for (int i = pattern_length - 2; i >= 0; --i) {
-        if (i > g && suffixes[i + pattern_length - 1 - f] < i - g) {
-            suffixes[i] = suffixes[i + pattern_length - 1 - f];
-        } else {
-            if (i < g) g = i;
-            f = i;
-
-            while (g >= 0 && pattern[g] == pattern[g + pattern_length - 1 - f]) g--;
-            suffixes[i] = f - g;
-        }
+    for (i = 0; i <= pattern_length; i++) {
+        if (shift[i] == 0) shift[i] = j;
+        if (i == j) j = border[j];
     }
+
 }
 
 bool BoyerMoore::map_contains(int key) {
@@ -86,8 +80,11 @@ void BoyerMoore::test() {
         std::cout << char((*it).first) << " " << (*it).first << " " << (*it).second << std::endl;
     }
     std::cout << "---- good suffixes ---" << std::endl;
-    for (int i = 0; i < pattern_length; i++)
-        std::cout << pattern[i] << " " << good_suffix_rule_table[i] << std::endl;
+    for (int i = 0; i <= pattern_length; i++)
+        std::cout << pattern[i] << " " << border[i] << std::endl;
+    std::cout << "------shift-----------" << std::endl;
+    for (int i = 0; i <= pattern_length; i++)
+        std::cout << pattern[i] << " " << shift[i] << std::endl;
     std::cout << "----------------------" << std::endl;
 }
 
