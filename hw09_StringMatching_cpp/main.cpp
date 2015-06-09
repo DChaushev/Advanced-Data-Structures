@@ -24,10 +24,14 @@ void boyer_moore_search(BoyerMoore * bm, const char* text, int text_length) {
             i += bm->shift[0];
         } else {
             int good = bm->shift[j + 1];
-            int bad = j - bm->get_bad_char(text[i + j]);
+            int bad = j - bm->get_bad_match(text[i + j]);
             i += max(good, bad);
         }
     }
+}
+
+void boyer_moore_search(BoyerMoore * bm, const char* text) {
+    boyer_moore_search(bm, text, strlen(text));
 }
 
 /*
@@ -39,13 +43,13 @@ int main(int argc, char** argv) {
     const char * textLorem = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
     BoyerMoore * bm1 = new BoyerMoore("example.com");
-    boyer_moore_search(bm1, text, strlen(text));
+    boyer_moore_search(bm1, text);
     delete bm1;
 
     cout << "---------------" << endl;
 
     BoyerMoore * bm2 = new BoyerMoore("Lorem");
-    boyer_moore_search(bm2, textLorem, strlen(textLorem));
+    boyer_moore_search(bm2, textLorem);
     delete bm2;
 
     cout << "---------------" << endl;

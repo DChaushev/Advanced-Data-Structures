@@ -21,15 +21,14 @@ private:
     void preprocess_bad_character_rule();
 
     void preprocess_good_suffixes_rule_case1();
-    
+
     void preprocess_good_suffixes_rule_case2();
 
     bool map_contains(int key);
 
-    int get_bad_char(int key);
+    int get_bad_match(int key);
 
 public:
-
     BoyerMoore(char* pattern);
 
     virtual ~BoyerMoore();

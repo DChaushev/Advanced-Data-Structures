@@ -61,7 +61,6 @@ void BoyerMoore::preprocess_good_suffixes_rule_case2() {
         if (shift[i] == 0) shift[i] = j;
         if (i == j) j = border[j];
     }
-
 }
 
 bool BoyerMoore::map_contains(int key) {
@@ -69,7 +68,7 @@ bool BoyerMoore::map_contains(int key) {
     return got != bad_match_table.end();
 }
 
-int BoyerMoore::get_bad_char(int key) {
+int BoyerMoore::get_bad_match(int key) {
     if (map_contains(key))
         return bad_match_table[key];
     else return -1;
@@ -88,4 +87,3 @@ void BoyerMoore::test() {
         std::cout << pattern[i] << " " << shift[i] << std::endl;
     std::cout << "----------------------" << std::endl;
 }
-
