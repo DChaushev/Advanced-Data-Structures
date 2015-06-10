@@ -1,0 +1,6 @@
+http://www.example.com/something/index.html
+https://example.com/somethingelse/
+ftp://1.2.3.4/qweqweqweqwe/qweqweqweqwe/q
+ftp://aaa:bbbbbb@example.com/1/2/3
+https://sub1.sub2.example.org/1/2/file.html
+http://blog.example.com/2015/very_important_stuff/

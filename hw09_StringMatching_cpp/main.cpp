@@ -21,7 +21,7 @@ void boyer_moore_search(BoyerMoore * bm, const std::string& text) {
         j = bm->pattern_length - 1;
         while (j >= 0 && bm->pattern[j] == text[i + j]) j--;
         if (j < 0) {
-            cout << i << endl;
+            cout << text << " - " << i << endl;
             i += bm->shift[0];
         } else {
             int good = bm->shift[j + 1];
@@ -50,13 +50,12 @@ void test_boyer_moore() {
     BoyerMoore * bm3 = new BoyerMoore("Ipsum");
     boyer_moore_search(bm3, textLorem);
     delete bm3;
-    
+
     cout << "---------------" << endl;
 }
 
 void test_file_reading(std::string fileName) {
     vector<std::string> lines = FileReader::getLines(fileName);
-
     for (auto l : lines) {
         cout << l << endl;
     }
@@ -67,9 +66,18 @@ void test_file_reading(std::string fileName) {
  */
 int main(int argc, char** argv) {
 
-    test_boyer_moore();
-    test_file_reading("urls.txt");
+    //    test_boyer_moore();
+    //    test_file_reading("urls.txt");
 
+    vector<std::string> urls = FileReader::getLines("urls.txt");
+    const char* pattern = "example.com";
+
+    BoyerMoore * bm = new BoyerMoore(pattern);
+    for (auto url : urls) {
+        boyer_moore_search(bm, url);
+    }
+    delete bm;
+    
     return 0;
 }
 

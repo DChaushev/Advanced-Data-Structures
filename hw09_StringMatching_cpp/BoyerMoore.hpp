@@ -12,7 +12,7 @@
 
 class BoyerMoore {
 private:
-    char* pattern;
+    const char* pattern;
     int pattern_length;
 
     std::unordered_map<int, int> bad_match_table;
@@ -30,7 +30,7 @@ private:
     int get_bad_match(int key);
 
 public:
-    BoyerMoore(char* pattern);
+    BoyerMoore(const char* pattern);
 
     virtual ~BoyerMoore();
 

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string.h>
 
-BoyerMoore::BoyerMoore(char* pattern) :
+BoyerMoore::BoyerMoore(const char* pattern) :
 pattern(pattern) {
     this->pattern_length = strlen(pattern);
 
