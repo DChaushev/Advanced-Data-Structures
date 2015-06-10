@@ -8,6 +8,7 @@
 #ifndef BOYERMOORE_HPP
 #define	BOYERMOORE_HPP
 #include <unordered_map>
+#include <string>
 
 class BoyerMoore {
 private:
@@ -35,7 +36,7 @@ public:
 
     void test();
 
-    friend void boyer_moore_search(BoyerMoore* bm, const char* text, int text_length);
+    friend void boyer_moore_search(BoyerMoore*, const std::string&);
 
 };
 
