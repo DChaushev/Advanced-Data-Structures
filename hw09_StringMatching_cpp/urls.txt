@@ -14,3 +14,4 @@ http://example.com.com.com.com
 http://example
 http://example.something.com
 http://example.something.com/career
+http://www.example.com.example.com
