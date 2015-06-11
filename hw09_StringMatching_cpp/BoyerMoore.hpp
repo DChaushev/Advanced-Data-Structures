@@ -14,10 +14,10 @@
  * This class makes the Boyer-Moore preprocessing of a pattern.
  * It applies the bad characters rule and the good suffixes one.
  * 
- * This article helped me understand it:
+ * This article helped me understand and implement the algorithm:
  * http://www.inf.fh-flensburg.de/lang/algorithmen/pattern/bmen.htm
  * 
- * and a couple of lectures on youtube
+ * ...and a couple of lectures on youtube
  * 
  */
 class BoyerMoore {

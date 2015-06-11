@@ -1,6 +1,8 @@
 /* 
  * File:   main.cpp
- * Author: Dimitar
+ * Author: Dimitar Chaushev
+ * FN: 61589
+ * Algorithm: Boyer-Moore
  *
  * Created on June 9, 2015, 10:52 AM
  */
