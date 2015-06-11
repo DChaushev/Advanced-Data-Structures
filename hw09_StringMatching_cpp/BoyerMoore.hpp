@@ -10,11 +10,28 @@
 #include <unordered_map>
 #include <string>
 
+/**
+ * This class makes the Boyer-Moore preprocessing of a pattern.
+ * It applies the bad characters rule and the good suffixes one.
+ * 
+ * This article helped me understand it:
+ * http://www.inf.fh-flensburg.de/lang/algorithmen/pattern/bmen.htm
+ * 
+ * and a couple of lectures on youtube
+ * 
+ */
 class BoyerMoore {
 private:
     const char* pattern;
     int pattern_length;
 
+    /*
+     * Instead of using an array to keep all of the characters in the ascii table,
+     * I'm using this hash table to keep only the ones from the pattern.
+     * 
+     * That's why I'm using get_bad_match() function - it returns -1 if the character is not
+     * in the table.
+     */
     std::unordered_map<int, int> bad_match_table;
     int * border;
     int * shift;

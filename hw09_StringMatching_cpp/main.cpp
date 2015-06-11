@@ -17,6 +17,34 @@ const char * F_FILENAME = "-i";
 const char * F_DOMAIN = "-d";
 const char * F_PROTOCOL = "-p";
 
+/**
+ * It's not actually checking only the letters (see ASCII),
+ * but it does the job for my purposes.
+ * 
+ * @param c
+ * @return 
+ */
+bool is_a_letter(char c) {
+    int code = int(c);
+    return c >= 65 && c <= 122;
+}
+
+/**
+ * Takes a BoyerMoore object, a text and optionally the length of the text(see the overload below)
+ * as a parameters.
+ * 
+ * Returns the number of occurrences of the pattern in the text.
+ * In our case the pattern must match other specific requests. 
+ * 
+ * This function can take a custom length of the text, because when I'm checking
+ * the protocol, I'm passing as length the length of the protocol, thus I'm processing
+ * only the beginning.
+ * 
+ * @param bm
+ * @param text
+ * @param text_length
+ * @return 
+ */
 int boyer_moore_search(BoyerMoore * bm, const std::string& text, int text_length) {
 
     int cnt = 0;
@@ -27,7 +55,29 @@ int boyer_moore_search(BoyerMoore * bm, const std::string& text, int text_length
         j = bm->pattern_length - 1;
         while (j >= 0 && bm->pattern[j] == text[i + j]) j--;
         if (j < 0) {
-            if ((text_length > i + bm->pattern_length && text[i + bm->pattern_length] == '.') || (i - 1 == 0 && text[i - 1] == '/') || (i - 1 > 0 && text[i - 2] != '/' && text[i - 1] == '/')) {
+
+            int suffix_index = i + bm->pattern_length; // the index of the first character after the pattern.
+            int preffix_index = i - 1; // the index of the first character before the pattern.
+            /*  ____<preffix_index><pattern><suffix_index>____ */
+
+            /*
+             * I'm sorry about the expression below...
+             * I just didn't want to make another friend function to the BoyerMoore class or another function that takes the text as a parameter.
+             * 
+             * What is it checking:
+             *  - if the character before the start of the pattern is a letter or a single '/'
+             *  - if the character after the end of the pattern is something different than a '/' or that's the end.
+             * 
+             * In both cases - the domain is invalid.
+             * 
+             */
+
+            if ((text_length > suffix_index && (text[suffix_index] == '.' || is_a_letter(text[suffix_index])))
+                    ||
+                    ((preffix_index == 0 && text[preffix_index] == '/') ||
+                    (preffix_index > 0 && text[preffix_index - 1] != '/' && text[preffix_index] == '/') ||
+                    (preffix_index >= 0 && is_a_letter(text[preffix_index])))) {
+
                 int good = bm->shift[j + 1];
                 int bad = j - bm->get_bad_match(text[i + j]);
                 i += max(good, bad);
@@ -92,7 +142,11 @@ int main(int argc, char** argv) {
             }
         }
         cout << domain << " - " << cnt << endl;
+        delete pattern_bm;
     }
+
+    if (protocol_flag)
+        delete protocol_bm;
 
     return 0;
 }

@@ -10,6 +10,13 @@
 #include <vector>
 #include <string>
 
+/**
+ * The only static method takes a filename as an argument and returns the lines
+ * from the file as a vector<string>
+ * 
+ * @param file
+ * @return 
+ */
 class FileReader {
 public:
     static std::vector<std::string> getLines(std::string file);
