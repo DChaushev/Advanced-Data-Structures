@@ -7,21 +7,28 @@
 
 #include <iostream>
 #include <string>
+#include <string.h>
 #include "BoyerMoore.hpp"
 #include "FileReader.hpp"
 
 using namespace std;
 
-void boyer_moore_search(BoyerMoore * bm, const std::string& text) {
+const char * F_FILENAME = "-i";
+const char * F_DOMAIN = "-d";
+const char * F_PROTOCOL = "-p";
 
+int boyer_moore_search(BoyerMoore * bm, const std::string& text, int text_length) {
+
+    int cnt = 0;
     int i = 0;
     int j;
 
-    while (i <= text.length() - bm->pattern_length) {
+    while (i <= text_length - bm->pattern_length) {
         j = bm->pattern_length - 1;
         while (j >= 0 && bm->pattern[j] == text[i + j]) j--;
         if (j < 0) {
-            cout << text << " - " << i << endl;
+            //cout << text << " - " << i << endl;
+            cnt++;
             i += bm->shift[0];
         } else {
             int good = bm->shift[j + 1];
@@ -29,6 +36,11 @@ void boyer_moore_search(BoyerMoore * bm, const std::string& text) {
             i += max(good, bad);
         }
     }
+    return cnt;
+}
+
+int boyer_moore_search(BoyerMoore * bm, const std::string& text) {
+    return boyer_moore_search(bm, text, text.length());
 }
 
 void test_boyer_moore() {
@@ -66,18 +78,49 @@ void test_file_reading(std::string fileName) {
  */
 int main(int argc, char** argv) {
 
-    //    test_boyer_moore();
-    //    test_file_reading("urls.txt");
+    vector<string> domains;
+    std::string protocol = "";
+    std::string fileName;
+    bool protocol_flag = false;
+    BoyerMoore * p;
 
-    vector<std::string> urls = FileReader::getLines("urls.txt");
-    const char* pattern = "example.com";
+    for (int i = 1; i < argc; i++) {
+        cout << "'" << argv[i] << "' ";
 
-    BoyerMoore * bm = new BoyerMoore(pattern);
-    for (auto url : urls) {
-        boyer_moore_search(bm, url);
+        if (strcmp(argv[i], F_FILENAME) == 0)
+            fileName = argv[i + 1];
+        else if (strcmp(argv[i], F_DOMAIN) == 0)
+            domains.push_back(argv[i + 1]);
+        else if (strcmp(argv[i], F_PROTOCOL) == 0) {
+            protocol = argv[i + 1];
+            protocol += ":";
+            protocol_flag = true;
+        }
     }
-    delete bm;
-    
+    cout << endl << endl;
+
+    vector<string> urls = FileReader::getLines(fileName);
+    if (protocol_flag) {
+        p = new BoyerMoore(protocol.c_str());
+    }
+
+    for (auto domain : domains) {
+        int cnt = 0;
+        BoyerMoore * bm = new BoyerMoore(domain.c_str());
+        for (auto u : urls) {
+            if (protocol_flag) {
+                if (boyer_moore_search(p, u, protocol.length())) {
+                    cnt += boyer_moore_search(bm, u);
+                }
+            } else {
+                cnt += boyer_moore_search(bm, u);
+            }
+        }
+        cout << domain << " - " << cnt << endl;
+    }
+
+
+
     return 0;
 }
 

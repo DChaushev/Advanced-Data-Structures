@@ -36,7 +36,7 @@ public:
 
     void test();
 
-    friend void boyer_moore_search(BoyerMoore*, const std::string&);
+    friend int boyer_moore_search(BoyerMoore*, const std::string&, int);
 
 };
 
