@@ -27,9 +27,14 @@ int boyer_moore_search(BoyerMoore * bm, const std::string& text, int text_length
         j = bm->pattern_length - 1;
         while (j >= 0 && bm->pattern[j] == text[i + j]) j--;
         if (j < 0) {
-            //cout << text << " - " << i << endl;
-            cnt++;
-            i += bm->shift[0];
+            if ((text_length > i + bm->pattern_length && text[i + bm->pattern_length] == '.') || (i - 1 == 0 && text[i - 1] == '/') || (i - 1 > 0 && text[i - 2] != '/' && text[i - 1] == '/')) {
+                int good = bm->shift[j + 1];
+                int bad = j - bm->get_bad_match(text[i + j]);
+                i += max(good, bad);
+            } else {
+                cnt++;
+                i += bm->shift[0];
+            }
         } else {
             int good = bm->shift[j + 1];
             int bad = j - bm->get_bad_match(text[i + j]);
@@ -81,6 +86,7 @@ int main(int argc, char** argv) {
     vector<string> domains;
     std::string protocol = "";
     std::string fileName;
+
     bool protocol_flag = false;
     BoyerMoore * p;
 
@@ -106,7 +112,9 @@ int main(int argc, char** argv) {
 
     for (auto domain : domains) {
         int cnt = 0;
+
         BoyerMoore * bm = new BoyerMoore(domain.c_str());
+
         for (auto u : urls) {
             if (protocol_flag) {
                 if (boyer_moore_search(p, u, protocol.length())) {
@@ -118,8 +126,6 @@ int main(int argc, char** argv) {
         }
         cout << domain << " - " << cnt << endl;
     }
-
-
 
     return 0;
 }

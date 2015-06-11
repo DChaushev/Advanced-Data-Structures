@@ -4,3 +4,13 @@ ftp://1.2.3.4/qweqweqweqwe/qweqweqweqwe/q
 ftp://aaa:bbbbbb@example.com/1/2/3
 https://sub1.sub2.example.org/1/2/file.html
 http://blog.example.com/2015/very_important_stuff/
+http://www.fmi.uni-sofia.bg
+http://career.fmi.uni-sofia.bg/
+http://dni.career.fmi.uni-sofia.bg/
+http://example.com/
+http://example.com
+http://example.com/lkljkljkljkkj
+http://example.com.com.com.com
+http://example
+http://example.something.com
+http://example.something.com/career
