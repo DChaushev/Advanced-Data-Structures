@@ -18,16 +18,56 @@ public class BinomialHeap implements BinomialHeapInterface {
     }
 
     //TODO: for testing - delete before submitting
-    public BinomialHeap(Node root){
+    public BinomialHeap(Node root) {
         this.root = root;
     }
-    
+
     public BinomialHeap(Comparable[] elements) {
     }
 
     @Override
     public Node consolidate(Node leftRoot, int leftSize, Node rightRoot, int rightSize) {
-        return null;
+        if (leftRoot == null) {
+            return rightRoot;
+        }
+        if (rightRoot == null) {
+            return leftRoot;
+        }
+
+        String leftRepresentation = Integer.toBinaryString(leftSize);
+        String rightRepresentation = Integer.toBinaryString(rightSize);
+
+        if (leftRepresentation.length() > rightRepresentation.length()) {
+            int diff = leftRepresentation.length() - rightRepresentation.length();
+            rightRepresentation = String.format("%0" + diff + "d" + rightRepresentation, 0);
+        }
+        if (rightRepresentation.length() > leftRepresentation.length()) {
+            int diff = rightRepresentation.length() - leftRepresentation.length();
+            leftRepresentation = String.format("%0" + diff + "d" + leftRepresentation, 0);
+        }
+
+        System.out.println(leftRepresentation);
+        System.out.println(rightRepresentation);
+
+        Node current = new Node();
+        Node newRoot = current;
+        for (int i = leftRepresentation.length() - 1; i >= 0; i--) {
+            if (leftRepresentation.charAt(i) == '1') {
+                if (leftRoot != null) {
+                    current.right = leftRoot;
+                    leftRoot = leftRoot.right;
+                    current = current.right;
+                }
+            }
+            if (rightRepresentation.charAt(i) == '1') {
+                if (rightRoot != null) {
+                    current.right = rightRoot;
+                    rightRoot = rightRoot.right;
+                    current = current.right;
+                }
+            }
+        }
+        return newRoot.right;
     }
 
     @Override
@@ -49,12 +89,12 @@ public class BinomialHeap implements BinomialHeapInterface {
 
     @Override
     public Node getRoot() {
-        return null;
+        return this.root;
     }
 
     @Override
     public int getSize() {
-        return -1;
+        return this.size;
     }
 
     @Override
@@ -64,6 +104,7 @@ public class BinomialHeap implements BinomialHeapInterface {
 
     @Override
     public void union(BinomialHeapInterface otherHeap) {
+        this.root = consolidate(this.root, this.size, otherHeap.getRoot(), otherHeap.getSize());
     }
 
     @Override

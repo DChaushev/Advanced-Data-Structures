@@ -44,26 +44,27 @@ int main(int argc, char** argv) {
 
         treap.insert(6);
         treap.treverse();
-        treap.insert(2);
-        treap.treverse();
-        treap.insert(18);
-        treap.treverse();
-        treap.insert(-1);
-        treap.treverse();
-        treap.insert(4);
-        treap.treverse();
-        treap.insert(10);
-        treap.treverse();
-        treap.insert(3);
-        treap.treverse();
-        treap.insert(8);
-        treap.treverse();
-        treap.remove(8);
-        treap.treverse();
-
-        cout << "contains 3: " << treap.containsKey(3) << endl;
         treap.remove(6);
-        treap.treverse();
+//        treap.insert(2);
+//        treap.treverse();
+//        treap.insert(18);
+//        treap.treverse();
+//        treap.insert(-1);
+//        treap.treverse();
+//        treap.insert(4);
+//        treap.treverse();
+//        treap.insert(10);
+//        treap.treverse();
+//        treap.insert(3);
+//        treap.treverse();
+//        treap.insert(8);
+//        treap.treverse();
+//        treap.remove(8);
+//        treap.treverse();
+//
+//        cout << "contains 3: " << treap.containsKey(3) << endl;
+//        treap.remove(6);
+//        treap.treverse();
     
 
     return 0;

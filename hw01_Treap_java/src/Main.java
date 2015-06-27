@@ -27,11 +27,12 @@ public class Main {
     
     public static void main(String[] args) {
 
-//        Treap treap = new TreapImpl();
-//
-//
-//        treap.insert(6);
-//        System.out.println(treap);
+        Treap treap = new TreapImpl();
+
+
+        treap.insert(6);
+        System.out.println(treap);
+        treap.remove(6);
 //        treap.insert(2);
 //        System.out.println(treap);
 //        treap.insert(18);
@@ -52,12 +53,12 @@ public class Main {
 //        System.out.println(treap);
 //        System.out.println(treap.containsKey(6));
         
-        stressInsert(2_000_000);
-        stressInsert(4_000_000);
-        stressInsert(8_000_000);
-        stressInsert(16_000_000);
-        stressInsert(48_000_000);
-        stressInsert(50_000_000);
+//        stressInsert(2_000_000);
+//        stressInsert(4_000_000);
+//        stressInsert(8_000_000);
+//        stressInsert(16_000_000);
+//        stressInsert(48_000_000);
+//        stressInsert(50_000_000);
         
         
     }

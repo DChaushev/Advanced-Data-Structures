@@ -31,8 +31,11 @@ public interface BinomialHeapInterface {
         public Node right;
         Node parent;
         Node leftmostChild;
-        Comparable key;
+        public Comparable key;
 
+        public Node() {
+        }
+        
         public Node(Comparable key) {
             this.key = key;
         }
@@ -47,7 +50,7 @@ public interface BinomialHeapInterface {
      */
     //public BinomialHeap();
     /**
-     * Construct heap with the given elements. Expected runneing time
+     * Construct heap with the given elements. Expected running time
      * O(elements.length)
      *
      * @param elements - array containing the elements
@@ -64,8 +67,8 @@ public interface BinomialHeapInterface {
      *
      *
      * |NOTE| This method could have been static as long as it will not access
-     * any |NOTE| of the fields of the class. Still it is not static, because in
-     * some |NOTE| of the tests it will be overridden.
+     * |NOTE| any of the fields of the class. Still it is not static, because in
+     * |NOTE| some of the tests it will be overridden.
      *
      * @param leftRoot - the first node of the root list of the first heap
      * @param leftSize - the number of the elements in the left heap
@@ -100,7 +103,7 @@ public interface BinomialHeapInterface {
 
     /**
      * Unites the current heap with the one given. It is expected that the
-     * tructure of otherHeap will be destroyed in this method.
+     * structure of otherHeap will be destroyed in this method.
      *
      * This method is virtual for ease of testing. Still you need to implement
      * it.
